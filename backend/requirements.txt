@@ -2,9 +2,9 @@ uvicorn
 requests
 fastapi
 pydantic
-selenium==4.10.0
+selenium
 pytz
 pyyaml
-Selenium-Screenshot>=2.1.0
+Selenium-Screenshot
 pytest
 loguru

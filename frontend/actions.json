@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Automatización web",
+    "value": [
+      {"id": 1, "name": "Abrir navegador", "status": ""},
+      {"id": 2, "name": "Clic", "status": ""},
+      {"id": 3, "name": "Enviar texto", "status": ""},
+      {"id": 4, "name": "Extraer texto ", "status": ""},
+      {"id": 5, "name": "Extraer elemento web", "status": ""},
+      {"id": 6, "name": "Esperar a ", "status": ""},
+      {"id": 7, "name": "Cerrar navegador", "status": ""},
+      {"id": 8, "name": "Limpiar campo", "status": ""},
+      {"id": 9, "name": "Cambiar de ventana", "status": ""},
+      {"id": 10, "name": "Cambiar de iframe", "status": ""},
+      {"id": 11, "name": "Ventana de diálogo", "status": ""},
+      {"id": 12, "name": "Capturar pantalla", "status": ""},
+      {"id": 20, "name": "Establecer variable", "status": ""},
+      {"id": 21, "name": "Cerrar ventana o solapa", "status": ""}
+
+    ]
+  },
+  {
+    "name": "Verificar",
+    "value": [
+      {"id": 13, "name": "Igualdad", "status": ""},
+      {"id": 14, "name": "Elemento web", "status": ""}
+    ]
+  },
+  {
+    "name": "Texto",
+    "value": [
+      {"id": 15, "name": "Separar texto", "status": ""},
+      {"id": 16, "name": "Unir texto", "status": ""},
+      {"id": 17, "name": "Reemplazar texto", "status": ""},
+      {"id": 18, "name": "Recortar texto", "status": ""},
+      {"id": 19, "name": "Convertir texto", "status": ""}
+    ]
+  }
+]
