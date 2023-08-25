@@ -1,6 +1,6 @@
 PASOS PARA ARRANCAR EL BACK
 
-1- Tener instaldo python
+1- Tener instaldo python https://www.python.org/ftp/python/3.11.5/python-3.11.5-amd64.exe
 
 2- Crear un entorno virtual
 
@@ -27,7 +27,8 @@ El mismo proyecto tiene un swagger http://127.0.0.1:5000/docs
 donde podemos probar el correcto funcionamiento
 vamos al POST /flow hacemos click a la derecha en el boton "try it out"
 y pegamos el siguiente ejemplo
-`{
+```
+{
         "command": "open_browser",
         "arguments": {"browser": "chrome",
                       "url": "http://www.python.org",
@@ -37,7 +38,8 @@ y pegamos el siguiente ejemplo
                       "browser_instance": "driver"},
         "flow_id": 0,
         "variable_data": "driver"
-    }`
+    }
+```
 esto deberia abrir un navegador chrome
 
 tambien podriamos hacer lo mismo desde el postman
