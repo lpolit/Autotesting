@@ -1,4 +1,4 @@
-# Autotesting2000
+# Autotesting
 Proyecto para testear aplicaciones web
 
 - Con el impulso de la problematica que existe en muchos proyectos sobre la falta de QA Automation, y el costo
