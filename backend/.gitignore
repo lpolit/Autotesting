@@ -154,7 +154,7 @@ cython_debug/
 
 #Allure stuff
 allure_results/
-*.png
+
 
 
 
