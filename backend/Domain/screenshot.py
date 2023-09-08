@@ -1,9 +1,9 @@
 import base64
 
-from common_ui.base_waits import BaseWait
+from common.base_waits import BaseWait
 
-from Domain.step import Step
-from common_ui.screenshot import Screenshot as Screen
+from domain.step import Step
+from common.screenshot import Screenshot as Screen
 
 
 class Screenshot(Step):

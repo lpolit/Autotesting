@@ -1,6 +1,6 @@
 from typing import List
 
-from Domain.step import Step
+from domain.step import Step
 
 
 class Flow:

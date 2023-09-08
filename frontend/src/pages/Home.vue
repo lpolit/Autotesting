@@ -1,6 +1,11 @@
 <template>
-  <HelloWorld msg="Bienvenido al template de Vue.js + TypeScript" />
+  <input type="button" value="INGRESAR" @click="new_flux"/>
 </template>
 
 <script setup lang="ts">
-import HelloWorld from "../components/HelloWorld.vue";º</script>
+import router from "@/router";
+
+const new_flux = () => {
+  router.push("new_flux")
+}
+</script>

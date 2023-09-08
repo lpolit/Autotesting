@@ -2,9 +2,11 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 import App from "./App.vue";
-
+import Header from "@/pages/Header.vue";
+import Footer from "@/pages/Footer.vue";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+
 
 // import { EdaVue } from "@eda/vue";
 // import "@eda/style/dist/css/all.css";
@@ -17,10 +19,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
-
-
-
-// app.use(EdaVue);
+app.component('Header', Header)
+app.component('Footer', Footer)
 app.use(pinia);
 app.use(router);
 app.mount("#app");
+

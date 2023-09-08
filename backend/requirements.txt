@@ -2,9 +2,14 @@ uvicorn
 requests
 fastapi
 pydantic
-selenium
+selenium==4.10.0
 pytz
 pyyaml
-Selenium-Screenshot
+Selenium-Screenshot>=2.1.0
 pytest
 loguru
+
+PyJWT
+python-decouple
+db-sqlite3
+pydantic[email]

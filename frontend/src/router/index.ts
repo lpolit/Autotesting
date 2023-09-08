@@ -1,21 +1,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-// const Home = () => import("../pages/Home.vue");
-// const Tabla = () => import("../pages/Tabla.vue");
-// const Modal = () => import("../pages/Modal.vue");
-const NotFound = () => import("../pages/NotFound.vue");
+const Home = () => import("../pages/Home.vue");
+const Login = () => import("../pages/Login.vue");
+const New_Flux = () => import("../pages/New_Flux.vue")
 
 const routes = [
-  // { path: "/", component: Home, meta: { title: "Inicio" } },
-  // { path: "/tabla", component: Tabla, meta: { title: "Tabla" } },
-  // { path: "/modal", component: Modal, meta: { title: "Modal" } },
-  {
-    path: "/notfound",
-    component: NotFound,
-    meta: { title: "NotFound Example" },
-  },
-  { path: "/:pathMatch(.*)*", name: "not-found", component: NotFound },
-  { path: "/:pathMatch(.*)", name: "bad-not-found", component: NotFound },
+  { path: "/", component: Login, meta: { title: "Login" } },
+  { path: "/home", component: Home, meta: { title: "Home"} },
+  { path: "/new_flux", component: New_Flux, meta: { title: "New_Flux"} },
+
 ];
 
 const router = createRouter({

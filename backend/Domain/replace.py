@@ -1,6 +1,6 @@
 import re
 
-from Domain.step import Step
+from domain.step import Step
 
 
 class Replace(Step):

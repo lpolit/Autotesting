@@ -3,7 +3,7 @@ import os
 
 from Screenshot import Screenshot as scr
 
-from common_ui.file_utils import FileUtils
+from common.file_utils import FileUtils
 
 
 class Screenshot:

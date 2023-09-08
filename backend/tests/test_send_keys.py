@@ -7,7 +7,7 @@ def test_send_keys(endpoint_flow):
         "comando": "send_keys",
         "argumentos": { "selector_type": "xpath",
                         "path_element": "//*[@id='F1:username']",
-                        "text_to_send": "55555555",
+                        "text_to_send": "20324037056",
                         "wait_timeout": "10"
                        },
         "flow_id": 1

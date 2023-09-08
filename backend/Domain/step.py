@@ -1,5 +1,5 @@
-from common_ui.base_step import BaseStep
-from common_ui.base_waits import BaseWait
+from common.base_step import BaseStep
+from common.base_waits import BaseWait
 from selenium.webdriver.common.by import By
 
 from main import plani

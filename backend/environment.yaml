@@ -1,2 +1,3 @@
 test:
   url: "http://localhost:5000"
+  path_db: "D:\Repositorios\framework-test\backend\autotesting.db"

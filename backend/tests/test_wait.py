@@ -15,7 +15,7 @@ def test_wait_title_is(endpoint_flow, titulo = "Acceso con Clave Fiscal - AFIP")
     response = WsCore.execute_request_post(endpoint=endpoint_flow, json=body)
     assert response.status_code == 200
 
-def test_wait_title_contains(endpoint_flow, titulo = "Python"):
+def test_wait_title_contains(endpoint_flow, titulo = "AFIP"):
     body = {
         "comando": "wait_title_contains",
         "argumentos": { "selector_type": "id",
@@ -44,7 +44,7 @@ def test_wait_element_is_presence(endpoint_flow, selector="xpath", path="//*[@id
     response = WsCore.execute_request_post(endpoint=endpoint_flow, json=body)
     assert response.status_code == 200
 
-def test_wait_url_contains(endpoint_flow, url="python"):
+def test_wait_url_contains(endpoint_flow, url="afip"):
     body = {
         "comando": "wait_url_contains",
         "argumentos": {"selector_type": "id",

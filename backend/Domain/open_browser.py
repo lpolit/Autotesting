@@ -1,5 +1,5 @@
-from Domain.step import Step
-from common_ui.driver import Driver
+from domain.step import Step
+from common.driver import Driver
 from main import plani
 
 

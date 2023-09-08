@@ -1,7 +1,7 @@
-from common_ui.base_waits import BaseWait
+from common.base_waits import BaseWait
 from selenium.webdriver import ActionChains
 
-from Domain.step import Step
+from domain.step import Step
 
 
 class Click(Step):

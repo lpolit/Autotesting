@@ -1,4 +1,4 @@
-from Domain.step import Step
+from domain.step import Step
 
 
 class AsserEquals(Step):

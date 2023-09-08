@@ -1,6 +1,6 @@
-from common_ui.base_waits import BaseWait
+from common.base_waits import BaseWait
 
-from Domain.step import Step
+from domain.step import Step
 
 
 class Wait(Step):

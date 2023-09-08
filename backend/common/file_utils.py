@@ -7,7 +7,18 @@ import yaml
 
 
 class FileUtils:
+    @staticmethod
+    def config_location():
+        if "CONFIG_LOCATION" in os.environ:
+            _location = os.getenv("CONFIG_LOCATION")
+        elif "VIRTUAL_ENV" in os.environ:
+            _SIN_EL_ULTIMO = -1
+            _location = os.sep.join(os.getenv("VIRTUAL_ENV").split(os.sep)[:_SIN_EL_ULTIMO])
+        else:
+            _location = os.getcwd()
+        return _location
 
+    ENVIRONMENT_PATH = f"{config_location()}/environment.yaml"
     @staticmethod
     def get_yaml_data(file_path):
         with open(file_path, "r", encoding='utf-8') as f:

@@ -1,14 +1,18 @@
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Body, Depends
+from pydantic import BaseModel, Field, EmailStr
 import uvicorn
 from starlette import status
 
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
-from Helpers.router import set_router_command, router_command
+from helpers.router import set_router_command, router_command
+from auth.jwt_handler import signJWT
+from auth.jwt_bearer import jwtBearer
+import db.user_db as userDb
+import db.flux_db as fluxDb
 
 middleware = [
     Middleware(
@@ -31,6 +35,29 @@ class Comando(BaseModel):
     flow_id: Optional[int]
     variable_data: Optional[object]
 
+class UserSchema(BaseModel):
+    fullname: str = Field(default=None)
+    email : EmailStr = Field(default=None)
+    password : str = Field(default=None)
+    class Config:
+        the_schema = {
+           "user_demo":{
+               "name":"leogg",
+               "email":"leoggg@gmail.com",
+               "pass": "123"
+           }
+        }
+
+class UserLoginSchema(BaseModel):
+    email : EmailStr = Field(default=None)
+    password : str = Field(default=None)
+    class Config:
+        the_schema = {
+           "user_demo":{
+               "email":"leoggg@gmail.com",
+               "pass": "123"
+           }
+        }
 
 ############### ENDPOINTS ###################
 @app.get("/")
@@ -51,9 +78,35 @@ def flow(comando: Comando):
             detail=f"Error: {e}",
         )
 
-@app.get("/test")
+@app.get("/test", dependencies=[Depends(jwtBearer())])
 def flow():
     return {"HOLAAAAAAAAAAAAAAA"}
+
+
+@app.post("/user/signup")
+def user_signup(user : UserSchema = Body(default=None)):
+    userDb.insert_user(user)
+    return signJWT(user.email)
+
+def check_user(data: UserLoginSchema):
+    users = userDb.get_all_users()
+    for user in users:
+        if user[1]==data.email and user[2] == data.password:
+            return True
+        return False
+
+@app.post("/user/login")
+def user_login(user : UserLoginSchema = Body(default=None)):
+    if check_user(user):
+        return signJWT(user.email)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: Invalid login details!",
+        )
+
+
+
 
 # @app.post("/demo")
 # async def demo():
