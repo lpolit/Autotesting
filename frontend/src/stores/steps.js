@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useStepStore = defineStore({
+export let useStepStore = defineStore({
     id: 'steps',
     state: () => ({
         list_steps : {steps:[]},

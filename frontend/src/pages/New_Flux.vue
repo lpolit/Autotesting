@@ -3,14 +3,15 @@
     <a class="navbar-brand" href="#">
       <img src="logo.png" alt="Autotesting">
     </a>
-
+    {{user_login}}
+    <button class="btn btn-primary" @click="log_out">LOG OUT</button>
     <div  class="navbar-collapse collapse navbar-align " >
       <img width="50" src="avatar.png" alt="Autotesting">
     </div>
   </header>
 
   <div  class=" navbar-align" >
-    <a href="#" title="Ejecutar flujo" >
+    <a title="Ejecutar flujo" >
       <button class="btn btn-primary" @click="ejecutar_flujo">
         <svg width="16" height="16" fill="currentColor"
              class="bi bi-play-fill" viewBox="0 0 16 16">
@@ -21,7 +22,7 @@
 
     </a>
 
-    <a href="#" title="Detener flujo">
+    <a title="Detener flujo">
       <button class="btn btn-primary" @click="detener_flujo">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-stop-fill" viewBox="0 0 16 16">
@@ -31,8 +32,8 @@
       </button>
     </a>
 
-    <a href="#" title="Guardar flujo">
-      <button class="btn btn-primary">
+    <a title="Guardar flujo">
+      <button class="btn btn-primary"  @click="guardar_flujo">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-save-fill" viewBox="0 0 16 16">
           <path
@@ -196,12 +197,13 @@ import {
   MDBModalFooter
 } from "mdb-vue-ui-kit";
 import list_actions from "../../actions.json";
-import {ref, computed, nextTick} from "vue";
+import {ref, computed, nextTick, onMounted} from "vue";
 import {VueDraggableNext} from 'vue-draggable-next';
 import axios from "axios";
 
 import {useStepStore} from "@/stores/steps";
 import Icon from "@/components/Icon.vue";
+import router from "@/router";
 
 
 const step_store = useStepStore();
@@ -241,6 +243,22 @@ const list_components = [
   {"id": 21, "value": CloseWindow},
   {"id": 22, "value": If}
 ];
+
+const user_login = ref(String);
+
+onMounted (() => {
+  try {
+    let user = sessionStorage.getItem("user")
+    if (user == "" || user == null){
+      router.push("/")
+    }
+
+    user_login.value=user
+  } catch (error) {
+    router.push("/")
+    console.log(error, 'error from decoding token')
+  }
+})
 
 const erase_epanel_text = computed(() => {
   return step_store.list_steps.steps.length === 0;
@@ -382,6 +400,28 @@ const detener_flujo = () => {
   }).catch((error) => {
     console.log(error)
   })
+}
+
+const guardar_flujo = () => {
+  const path = '/api/flow/save'
+  const json = {
+    "name": "prueba1",
+    "flux": sessionStorage.getItem("steps")
+  };
+
+  axios.post(path, json).then((response) => {
+    console.log(response.data)
+    alert("guardado exitoso")
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+
+const log_out = () => {
+  step_store.$reset()
+  //sessionStorage.clear()
+  router.push("/")
 }
 
 const delete_card = (index: number) => {

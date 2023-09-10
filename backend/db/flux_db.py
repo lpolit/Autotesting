@@ -1,33 +1,42 @@
 import sqlite3
+
+from common.file_utils import FileUtils
+
+_DB = FileUtils.config_location()+"/autotesting.db"
 def create_table_flux():
-    con = sqlite3.connect("autotesting.db")
+    con = sqlite3.connect(_DB)
     cur = con.cursor()
     # Create table
-
-    cur.execute("CREATE TABLE movie(title, year, score)")
-
-
+    cur.execute('''CREATE TABLE flujos
+                   (nombre, flujo)''')
     con.commit()
     con.close()
 
-
-
-
-
-def insert_flux(flux: str):
-    con = sqlite3.connect("autotesting.db")
+def save_flux(FluxSchema):
+    con = sqlite3.connect(_DB)
     cur = con.cursor()
-    cur.execute("""
-            INSERT INTO movie VALUES
-                ('Monty Python and the Holy Grail', 1975, 8.2),
-                ('And Now for Something Completely Different', 1971, 7.5)
-        """)
+    try:
+        cur.execute(f"SELECT * FROM flujos WHERE nombre='{FluxSchema.name}'")
+        cur.execute(f"UPDATE flujos SET flujo='{FluxSchema.flux}' WHERE nombre = '{FluxSchema.name}'")
+    except:
+        cur.execute(f"INSERT INTO flujos VALUES ('{FluxSchema.name}','{FluxSchema.flux}')")
+    finally:
+        con.commit()
+        con.close()
 
+
+def get_flux(name):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    cur.execute(f"SELECT * FROM flujos WHERE nombre='{name}'")
+    flux =cur.fetchone()
     con.close()
+    return flux
 
-def get_all_fluxs():
-    con = sqlite3.connect("autotesting.db")
+def get_all_flujos():
+    con = sqlite3.connect(_DB)
     cur = con.cursor()
-    res = cur.execute("SELECT score FROM movie")
-    print("acaaaaaaaaaaaaaaa")
-    print(res.fetchall())
+    cur.execute(f"SELECT * FROM flujos")
+    fluxs = cur.fetchall()
+    con.close()
+    return fluxs

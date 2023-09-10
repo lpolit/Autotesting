@@ -59,6 +59,9 @@ class UserLoginSchema(BaseModel):
            }
         }
 
+class FluxSchema(BaseModel):
+    name: str
+    flux: str
 ############### ENDPOINTS ###################
 @app.get("/")
 async def root():
@@ -78,6 +81,28 @@ def flow(comando: Comando):
             detail=f"Error: {e}",
         )
 
+
+@app.post("/flow/save")
+def flow(flux: FluxSchema):
+    try:
+        fluxDb.save_flux(flux)
+        return "Guardado Exitoso"
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+@app.post("/flow/abrir")
+def flow(flux: FluxSchema):
+    try:
+        flujo = fluxDb.get_flux(flux.name)
+        return flujo[1]
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
 @app.get("/test", dependencies=[Depends(jwtBearer())])
 def flow():
     return {"HOLAAAAAAAAAAAAAAA"}

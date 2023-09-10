@@ -24,7 +24,7 @@
        <script setup>
 
        import router from "@/router";
-       import { computed, ref } from "vue";
+       import {computed, onMounted, ref} from "vue";
        import axios from "axios";
 
 
@@ -36,6 +36,10 @@
        const passwordFieldIcon = computed(() => hidePassword.value ? "fa-eye" : "fa-eye-slash");
        const passwordFieldType = computed(() => hidePassword.value ? "password" : "text");
 
+       onMounted (() => {
+         localStorage.setItem("user", "")
+       })
+
        // eslint-disable-next-line @typescript-eslint/no-empty-function
        const doLogin = async () => {
 
@@ -46,8 +50,9 @@
 
          const path = '/api/user/login'
          await axios.post(path, json).then((response) => {
+           sessionStorage.setItem("user", email.value);
+           sessionStorage.setItem("Authorization",response.data["access token"])
            router.push("home")
-           console.log(response.status)
          }).catch((error) => {
            mensajeError.value = "Usuario o clave Invalida"
            console.log(error)
