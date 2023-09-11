@@ -1,16 +1,16 @@
 <template>
-  <header class="navbar navbar-expand-md navbar-light bg-light">
+  <header class="navbar navbar-expand-md navbar-light bg-light" style="border-bottom: 4px solid rgb(1 58 122); margin-bottom: 15px;height: 80px;">
     <a class="navbar-brand" href="#">
       <img src="logo.png" alt="Autotesting">
     </a>
-    {{user_login}}
-    <button class="btn btn-primary" @click="log_out">LOG OUT</button>
-    <div  class="navbar-collapse collapse navbar-align " >
-      <img width="50" src="avatar.png" alt="Autotesting">
-    </div>
-  </header>
 
-  <div  class=" navbar-align" >
+    <div  class="navbar-collapse collapse navbar-align " >
+      {{user_login}}
+      <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
+    </div>
+   </header>
+
+  <div style="margin-left: 73%;">
     <a title="Ejecutar flujo" >
       <button class="btn btn-primary" @click="ejecutar_flujo">
         <svg width="16" height="16" fill="currentColor"
@@ -587,6 +587,7 @@ body {
 .navbar-align{
   justify-content: end;
   align-self: end;
+  margin-bottom: 1%;
 }
 
 </style>

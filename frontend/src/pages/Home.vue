@@ -1,13 +1,19 @@
 <template>
-  <input type="button" value="INGRESAR" @click="new_flux"/>
-  el usuario es ... {{user_login}}
-  <input type="button" value="CARGAR FLUJO PRUEBA1" @click="abrir"/>
+  <header class="navbar navbar-expand-md navbar-light bg-light" style="border-bottom: 4px solid rgb(1 58 122); margin-bottom: 15px;height: 80px;">
+    <a class="navbar-brand" href="#">
+      <img src="logo.png" alt="Autotesting">
+    </a>
+
+    <div  class="navbar-collapse collapse navbar-align " >
+      {{user_login}}
+      <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
+    </div>
+  </header>
 
   <div class="page-container">
     <div class="page-content">
-      <navbar class="flex-container">
-        <button class="btn" action="secondary" @click="newflux">
-          <icon icon="add"/>
+      <navbar class="flex-container" >
+        <button class="btn btn-primary" style="margin:10px 0 35px" @click="new_flux">Nuevo flujo
         </button>
       </navbar>
       <div>
@@ -81,6 +87,15 @@ const filtrarElementos = computed(() => {
 
 .page-content {
   flex: 1;
+}
+.navbar-brand img {
+  width: 150px;
+}
+
+.navbar-align{
+  justify-content: end;
+  align-self: end;
+  margin-bottom: 1%;
 }
 
 </style>
