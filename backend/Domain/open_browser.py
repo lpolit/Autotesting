@@ -15,7 +15,7 @@ class OpenBrowser(Step):
         self.headless = args["headless"]
 
     def execute(self):
-            if plani[self.flow_id] is None:
+        if plani[self.flow_id] is None:
             _driver = Driver().get_driver(self.browser, self.headless)
             self.set_driver_execution(_driver)
         _driver.implicitly_wait(self.wait_timeout)

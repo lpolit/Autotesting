@@ -18,7 +18,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tabla-bootstrap :items="filtrarElementos"/>
+        <tablita :items="filtrarElementos"/>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@ import router from "@/router";
 import {onMounted, ref, computed} from "vue";
 import axios from "axios";
 import {useStepStore} from "@/stores/steps";
-import TablaBootstrap from "@/components/Table.vue";
+import Tablita from "@/components/Table.vue";
 
 const new_flux = () => {
   router.push("new_flux")

@@ -107,6 +107,7 @@ def flow(flux: FluxSchema):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Error: {e}",
         )
+
 @app.get("/test", dependencies=[Depends(jwtBearer())])
 def flow():
     return {"HOLAAAAAAAAAAAAAAA"}
