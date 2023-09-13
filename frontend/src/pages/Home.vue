@@ -13,7 +13,7 @@
   <div class="page-container">
     <div class="page-content">
       <navbar class="flex-container" >
-        <button class="btn btn-primary" style="margin:10px 0 35px" @click="new_flux">Nuevo flujo
+        <button class="btn btn-primary" style="margin:11px 130px 33px 3px" @click="new_flux">Nuevo flujo
         </button>
       </navbar>
       <div>
@@ -55,7 +55,7 @@ onMounted (() => {
 })
 
 const datos = ref([
-  {id: 1, nombre: "Elemento 1", fecha: "02/02/2023", estado: "Ejecutando", autor: "Lean P"},
+  {id: 1, nombre: "mi_reflujo", fecha: "02/02/2023", estado: "Ejecutando", autor: "Lean P"},
   {id: 2, nombre: "Elemento 2", fecha: "03/02/2023", estado: "Terminado", autor: "Andy K"},
   // Agrega más datos según sea necesario
 ]);

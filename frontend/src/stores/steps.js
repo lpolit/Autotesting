@@ -3,11 +3,12 @@ import { defineStore } from "pinia";
 export let useStepStore = defineStore({
     id: 'steps',
     state: () => ({
+        name_flux : '',
         list_steps : {steps:[]},
         list_vars : [],
         }),
     persist: {
         storage: sessionStorage,
-        paths: ['list_steps', 'list_vars'],
+        paths: ['name_flux','list_steps', 'list_vars'],
     },
 })

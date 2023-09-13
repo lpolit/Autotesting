@@ -8,7 +8,7 @@ def create_table_flux():
     cur = con.cursor()
     # Create table
     cur.execute('''CREATE TABLE flujos
-                   (nombre, flujo)''')
+                   (nombre, flujo, usuario)''')
     con.commit()
     con.close()
 
@@ -16,19 +16,23 @@ def save_flux(FluxSchema):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
     try:
-        cur.execute(f"SELECT * FROM flujos WHERE nombre='{FluxSchema.name}'")
-        cur.execute(f"UPDATE flujos SET flujo='{FluxSchema.flux}' WHERE nombre = '{FluxSchema.name}'")
+        cur.execute(f"SELECT * FROM flujos WHERE nombre='{FluxSchema.name}' and usuario ='{FluxSchema.user}'")
+        if cur.fetchone() == None:
+            cur.execute(f"INSERT INTO flujos VALUES ('{FluxSchema.name}','{FluxSchema.flux}', '{FluxSchema.user}')")
+        else:
+            cur.execute(
+                f"UPDATE flujos SET flujo='{FluxSchema.flux}' WHERE nombre = '{FluxSchema.name}'and usuario ='{FluxSchema.user}'")
     except:
-        cur.execute(f"INSERT INTO flujos VALUES ('{FluxSchema.name}','{FluxSchema.flux}')")
+        print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL FLUJO")
     finally:
         con.commit()
         con.close()
 
 
-def get_flux(name):
+def get_flux(FluxSchema):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
-    cur.execute(f"SELECT * FROM flujos WHERE nombre='{name}'")
+    cur.execute(f"SELECT * FROM flujos WHERE nombre='{FluxSchema.name}' and usuario ='{FluxSchema.user}'")
     flux =cur.fetchone()
     con.close()
     return flux

@@ -40,7 +40,6 @@
          localStorage.setItem("user", "")
        })
 
-       // eslint-disable-next-line @typescript-eslint/no-empty-function
        const doLogin = async () => {
 
          let json = {

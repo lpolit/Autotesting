@@ -9,8 +9,11 @@
       <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
     </div>
    </header>
+  <a value="Volver" @click="volver">Volver</a>
+  <input @change="set_name" v-model="flux_name" style="color: #083e56; font-size:20px; font-weight:bold; margin-left: 30%; border: 0; width: 750px;" type="text"/>
 
   <div style="margin-left: 73%;">
+
     <a title="Ejecutar flujo" >
       <button class="btn btn-primary" @click="ejecutar_flujo">
         <svg width="16" height="16" fill="currentColor"
@@ -209,8 +212,8 @@ import router from "@/router";
 const step_store = useStepStore();
 
 const modal = ref(false);
-// const exampleModal = ref(false);
 const excluded_steps = [7, 21];
+let flux_name = ref("");
 let step = ref("");
 let orden_step = ref(0);
 let hijo = ref();
@@ -254,6 +257,15 @@ onMounted (() => {
     }
 
     user_login.value=user
+    flux_name.value=step_store.name_flux
+
+    //PREGUNTAR POR EL ULTIMO ORDEN QUE HAY EN EL SESSIONSTORAGE y SETEARLO A orden_step
+    if(step_store.list_steps.steps.length!=0){
+      let steps = step_store.list_steps.steps
+      let max = steps.reduce((acc,steps)=> acc =acc > steps.orden? acc:steps.orden,0)
+      orden_step.value = max
+    }
+
   } catch (error) {
     router.push("/")
     console.log(error, 'error from decoding token')
@@ -283,7 +295,8 @@ const on_drop = (evt: any) => {
   if (stepID == "") return;
   clean(evt);
   step.value = get_item(parseInt(stepID));
-  step.value.orden = orden_step.value++;
+  orden_step.value++;
+  step.value.orden = orden_step.value;
   if (step.value !== undefined) {
     step_store.list_steps.steps.splice(card_pos, 0, step.value);
     check_modal_visibility();
@@ -402,11 +415,16 @@ const detener_flujo = () => {
   })
 }
 
+const set_name = () => {
+  step_store.name_flux = flux_name.value
+}
+
 const guardar_flujo = () => {
   const path = '/api/flow/save'
   const json = {
-    "name": "prueba1",
-    "flux": sessionStorage.getItem("steps")
+    "name": flux_name.value,
+    "flux": sessionStorage.getItem("steps"),
+    "user": user_login.value
   };
 
   axios.post(path, json).then((response) => {
@@ -417,7 +435,11 @@ const guardar_flujo = () => {
   })
 }
 
-
+const volver = () => {
+  step_store.$reset()
+  //sessionStorage.clear()
+  router.push("/home")
+}
 const log_out = () => {
   step_store.$reset()
   //sessionStorage.clear()

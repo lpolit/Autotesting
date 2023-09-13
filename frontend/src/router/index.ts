@@ -19,7 +19,7 @@ const router = createRouter({
 router.afterEach((to) => {
   // document.title = `${to.meta.title}`;
 
-  document.title = `Inicio`;
+  document.title = `Login`;
   window.scrollTo(0, 0);
 });
 

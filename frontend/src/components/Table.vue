@@ -18,7 +18,7 @@
       <td>
         <img style="cursor:pointer; width: 22px; margin-right: 8px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
         <img style="cursor:pointer; width: 22px; margin-right: 12px;" src="../icons/stop-fill.svg" @click="stop"/>
-        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar"/>
+        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.nombre)"/>
       </td>
       <td>{{ item.fecha }}</td>
       <td>{{ item.estado }}</td>
@@ -60,11 +60,12 @@ const new_flux = () => {
   router.push("new_flux")
 }
 
-const editar = () => {
+const editar = (nombre_flujo: any) => {
   const path = '/api/flow/abrir'
   const json = {
-    "name": "prueba1",
-    "flux": ""
+    "name": nombre_flujo,
+    "flux": "",
+    "user":sessionStorage.getItem("user")
   };
 
   axios.post(path, json).then((response) => {

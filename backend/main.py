@@ -62,6 +62,10 @@ class UserLoginSchema(BaseModel):
 class FluxSchema(BaseModel):
     name: str
     flux: str
+    user: str
+
+
+
 ############### ENDPOINTS ###################
 @app.get("/")
 async def root():
@@ -96,7 +100,7 @@ def flow(flux: FluxSchema):
 @app.post("/flow/abrir")
 def flow(flux: FluxSchema):
     try:
-        flujo = fluxDb.get_flux(flux.name)
+        flujo = fluxDb.get_flux(flux)
         return flujo[1]
     except Exception as e:
         raise HTTPException(
@@ -155,7 +159,6 @@ def user_login(user : UserLoginSchema = Body(default=None)):
 #     verificar_existencia(flow_id,opt={"xpath":"//table[@class='jig_table']"})
 #     cerrar_browser(flow_id)
 #     return {"Flux finalizado OK"}
-
 
 if __name__ == "__main__":
     set_router_command()
