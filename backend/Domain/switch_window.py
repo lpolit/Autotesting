@@ -1,4 +1,4 @@
-from domain.step import Step
+from Domain.step import Step
 
 
 class SwitchWindow(Step):

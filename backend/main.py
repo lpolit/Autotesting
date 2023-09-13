@@ -8,7 +8,7 @@ from starlette import status
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
-from helpers.router import set_router_command, router_command
+from Helpers.router import set_router_command, router_command
 from auth.jwt_handler import signJWT
 from auth.jwt_bearer import jwtBearer
 import db.user_db as userDb

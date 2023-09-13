@@ -2,7 +2,7 @@ import base64
 
 from common.base_waits import BaseWait
 
-from domain.step import Step
+from Domain.step import Step
 from common.screenshot import Screenshot as Screen
 
 

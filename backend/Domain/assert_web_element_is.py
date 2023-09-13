@@ -1,6 +1,6 @@
 from common.base_waits import BaseWait
 
-from domain.step import Step
+from Domain.step import Step
 
 
 class AssertWebElementIs(Step):
