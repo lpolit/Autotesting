@@ -1,13 +1,15 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-const Home = () => import("../pages/Home.vue");
+const Home_Flux = () => import("../pages/Home_Flux.vue");
+const Home_Project = () => import("../pages/Home_Project.vue");
 const Login = () => import("../pages/Login.vue");
 const New_Flux = () => import("../pages/New_Flux.vue")
 
 const routes = [
   { path: "/", component: Login, meta: { title: "Login" } },
-  { path: "/home", component: Home, meta: { title: "Home"} },
-  { path: "/new_flux", component: New_Flux, meta: { title: "New_Flux"} },
+  { path: "/home_flux", name:"home_flux", component: Home_Flux, meta: { title: "Mis Flujos"},props:true },
+  { path: "/home_project", name:"home_project", component: Home_Project, meta: { title: "Mis Projectos"},props: true },
+  { path: "/new_flux", name:"new_flux", component: New_Flux, meta: { title: "Flujo"} },
 
 ];
 

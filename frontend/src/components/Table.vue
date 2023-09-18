@@ -14,15 +14,15 @@
     <tbody>
     <tr v-for="item in items" :key="item.id">
       <td>{{ item.id }}</td>
-      <td>{{ item.nombre }}</td>
+      <td style="cursor:pointer;" @click="go_flux(item.name)">{{ item.name }}</td>
       <td>
         <img style="cursor:pointer; width: 22px; margin-right: 8px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
         <img style="cursor:pointer; width: 22px; margin-right: 12px;" src="../icons/stop-fill.svg" @click="stop"/>
-        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.nombre)"/>
+        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.name)"/>
       </td>
-      <td>{{ item.fecha }}</td>
-      <td>{{ item.estado }}</td>
-      <td>{{ item.autor }}</td>
+      <td>{{ item.date }}</td>
+      <td>{{ item.state }}</td>
+      <td>{{ item.author }}</td>
 
 
     </tr>
@@ -37,7 +37,8 @@ import axios from "axios";
 import {useStepStore} from "@/stores/steps";
 
 const props = defineProps({
-  items: Array
+  items: Array,
+  store: Object
 })
 const step_store = useStepStore();
 
@@ -56,9 +57,21 @@ const editAccion = (id) => {
   console.log("Acción Edit para el elemento con ID:", id);
 };
 
+const go_flux = (name:string)=> {
+  if(props.store.$id == "project"){
+    step_store.project_name = name;
+    router.push({name:"home_flux", params:{project_name: name}})
+  }
+}
+
 const new_flux = () => {
   router.push("new_flux")
 }
+
+
+
+
+
 
 const editar = (nombre_flujo: any) => {
   const path = '/api/flow/abrir'

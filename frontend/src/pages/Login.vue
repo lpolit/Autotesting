@@ -51,7 +51,7 @@
          await axios.post(path, json).then((response) => {
            sessionStorage.setItem("user", email.value);
            sessionStorage.setItem("Authorization",response.data["access token"])
-           router.push("home")
+           router.push("home_project")
          }).catch((error) => {
            mensajeError.value = "Usuario o clave Invalida"
            console.log(error)

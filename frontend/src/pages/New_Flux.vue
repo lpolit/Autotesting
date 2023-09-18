@@ -9,8 +9,15 @@
       <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
     </div>
    </header>
-  <a value="Volver" @click="volver">Volver</a>
-  <input @change="set_name" v-model="flux_name" style="color: #083e56; font-size:20px; font-weight:bold; margin-left: 30%; border: 0; width: 750px;" type="text"/>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a>{{step_store.project_name}}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{step_store.flux_name}}</li>
+    </ol>
+  </nav>
+<!--  <a value="Volver" @click="volver">Volver</a>-->
+
 
   <div style="margin-left: 73%;">
 
@@ -210,10 +217,11 @@ import router from "@/router";
 
 
 const step_store = useStepStore();
+const project_name = ref(router.currentRoute.value.params.project_name);
+const flux_name = ref(router.currentRoute.value.params.flux_name);
 
 const modal = ref(false);
 const excluded_steps = [7, 21];
-let flux_name = ref("");
 let step = ref("");
 let orden_step = ref(0);
 let hijo = ref();
@@ -610,6 +618,19 @@ body {
   justify-content: end;
   align-self: end;
   margin-bottom: 1%;
+}
+
+.breadcrumb {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-top: -16px;
+  list-style: none;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+  color:#007bff;
 }
 
 </style>
