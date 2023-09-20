@@ -13,6 +13,7 @@ from auth.jwt_handler import signJWT
 from auth.jwt_bearer import jwtBearer
 import db.user_db as userDb
 import db.flux_db as fluxDb
+import db.project_db as projectDb
 
 middleware = [
     Middleware(
@@ -49,8 +50,8 @@ class UserSchema(BaseModel):
         }
 
 class UserLoginSchema(BaseModel):
-    email : EmailStr = Field(default=None)
-    password : str = Field(default=None)
+    email: EmailStr = Field(default=None)
+    password: str = Field(default=None)
     class Config:
         the_schema = {
            "user_demo":{
@@ -60,18 +61,85 @@ class UserLoginSchema(BaseModel):
         }
 
 class FluxSchema(BaseModel):
-    name: str
+    flux_name: str
+    date: str
+    state: str
     flux: str
+    user: str
+    project_id: str
+
+class ProjectSchema(BaseModel):
+    project_name: str
+    date: str
+    state: str
     user: str
 
 
-
 ############### ENDPOINTS ###################
+
 @app.get("/")
 async def root():
     pass
     return {"message": "Hello World"}
 
+### PROJECT SERVICE ###
+@app.post("/project/insert")
+def flow(project: ProjectSchema):
+    try:
+        id_project = projectDb.insert_project(project)
+        return id_project
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+@app.post("/project/getAll")
+def flow():
+    try:
+        projects = projectDb.get_all_projects()
+        return projects
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+@app.post("/project/getAll/{username}")
+def get_projects_user_name(username: str):
+    try:
+        projects = projectDb.get_all_projects_for_user(username)
+        return projects
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+
+
+### FLOW SERVICE ########
+@app.post("/flow/getAll")
+def flow():
+    try:
+        flujos = fluxDb.get_all_flujos()
+        return flujos
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+@app.delete("/flow/deleteAll")
+def flow():
+    try:
+        fluxDb.delete_all_flujos()
+        return "Borrado Exitoso"
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
 
 @app.post("/flow")
 def flow(comando: Comando):
@@ -84,7 +152,6 @@ def flow(comando: Comando):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Error: {e}",
         )
-
 
 @app.post("/flow/save")
 def flow(flux: FluxSchema):
@@ -108,10 +175,9 @@ def flow(flux: FluxSchema):
             detail=f"Error: {e}",
         )
 
-@app.get("/test", dependencies=[Depends(jwtBearer())])
-def flow():
-    return {"HOLAAAAAAAAAAAAAAA"}
 
+
+##### USER SERVICE #############
 
 @app.post("/user/signup")
 def user_signup(user : UserSchema = Body(default=None)):
@@ -123,7 +189,7 @@ def check_user(data: UserLoginSchema):
     for user in users:
         if user[1]==data.email and user[2] == data.password:
             return True
-        return False
+    return False
 
 @app.post("/user/login")
 def user_login(user : UserLoginSchema = Body(default=None)):
@@ -135,6 +201,21 @@ def user_login(user : UserLoginSchema = Body(default=None)):
             detail=f"Error: Invalid login details!",
         )
 
+@app.post("/user/getAll")
+def get_all_users():
+    try:
+        users = userDb.get_all_users()
+        return users
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+##### TEST SERVICE #####
+@app.get("/test", dependencies=[Depends(jwtBearer())])
+def flow():
+    return {"HOLAAAAAAAAAAAAAAA"}
 
 
 

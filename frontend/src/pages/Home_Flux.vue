@@ -25,7 +25,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita :items="filtrarElementos" :store="flux_store"/>
+        <tablita :items="filtrarElementos" :store="project"/>
       </div>
       <MDBModal
           id="modal"

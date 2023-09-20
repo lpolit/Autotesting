@@ -42,20 +42,7 @@ const props = defineProps({
 })
 const step_store = useStepStore();
 
-const playAccion = (id) => {
-  // Implementa la lógica para la acción "play"
-  console.log("Acción Play para el elemento con ID:", id);
-};
 
-const stopAccion = (id) => {
-  // Implementa la lógica para la acción "stop"
-  console.log("Acción Stop para el elemento con ID:", id);
-};
-
-const editAccion = (id) => {
-  // Implementa la lógica para la acción "edit"
-  console.log("Acción Edit para el elemento con ID:", id);
-};
 
 const go_flux = (name:string)=> {
   if(props.store.$id == "project"){

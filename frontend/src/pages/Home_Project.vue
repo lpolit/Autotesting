@@ -58,6 +58,7 @@ import {
 const modal = ref();
 const project_name = ref("");
 const project_store = useProjectStore();
+const list_projects = ref([])
 
 
 const new_project = () => {
@@ -65,18 +66,37 @@ const new_project = () => {
   modal.value = true;
 }
 
-const save_new_project = () =>{
-  const name = project_name.value;
+const save_new_project = () => {
+
   const date_aux = new Date();
   const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
   const state = "-";
   const author = user_login;
-  project_store.max++;
-  project_store.list.push({"id": project_store.max, "name":name, "date":date, "state":state, "author": author});
+
   modal.value = false;
+
+  const path = '/api/project/insert'
+  const json = {
+    "project_name": project_name.value,
+    "date": date,
+    "state": state,
+    "user": user_login.value
+  };
+
+  axios.post(path, json).then((response) => {
+    console.log(response.data)
+    list_projects.value.push({
+      "id": response.data,
+      "name": project_name.value,
+      "date": date,
+      "state": state,
+      "author": author
+    });
+  }).catch((error) => {
+    console.log(error)
+  })
+
 }
-
-
 
 const user_login = ref(String);
 
@@ -91,6 +111,34 @@ onMounted (() => {
     router.push("/")
     console.log(error, 'error from decoding token')
   }
+
+  //LLEVAR A UNA FUNCION CARGAR TABLA
+  axios.post('/api/project/getAll/'+ user_login.value).then((response) => {
+    let list_aux = response.data;
+    for (let proj of list_aux) {
+      list_projects.value.push({
+        "id": proj[0],
+        "name": proj[1],
+        "date": proj[2],
+        "state": proj[3],
+        "author": proj[4],
+      });
+    }
+
+  }).catch((error) => {
+    console.log(error)
+  })
+
+
+
+
+
+
+
+
+
+
+
 })
 
 const filtroTabla = ref("");
@@ -98,7 +146,7 @@ const selectedItemId = ref(null);
 
 const filtrarElementos = computed(() => {
   const filtro = filtroTabla.value.toLowerCase();
-  return project_store.list.filter((item) => {
+  return list_projects.value.filter((item) => {
     return (
         item.id?.toString().includes(filtro) ||
         item.name?.toLowerCase().includes(filtro) ||

@@ -34,3 +34,11 @@ def get_all_users():
     usus = cur.fetchall()
     con.close()
     return usus
+
+def delete_all_users():
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    cur.execute(f"DELETE FROM usuarios")
+    con.commit()
+    con.close()
+
