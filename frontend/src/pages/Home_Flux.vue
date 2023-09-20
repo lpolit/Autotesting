@@ -12,8 +12,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a>{{step_store.project_name}}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{step_store.flux_name}}</li>
+      <li class="breadcrumb-item active"><a>{{project_name}}</a></li>
     </ol>
   </nav>
 
@@ -25,7 +24,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita :items="filtrarElementos" :store="project"/>
+        <tablita :items="filtrarElementos" :store="flux_store"/>
       </div>
       <MDBModal
           id="modal"
@@ -65,10 +64,13 @@ import {
 import {useStepStore} from "@/stores/steps";
 
 const modal = ref();
-const flux_name = ref("");
-const project_name = ref(router.currentRoute.value.params.project_name);
+
 const flux_store = useFluxStore();
 const step_store = useStepStore();
+const project_name = ref(step_store.project_name.split("-")[0]);
+const project_id = ref(step_store.project_name.split("-")[1]);
+const flux_name = ref(step_store.flux_name);
+const list_fluxs = ref ([])
 
 
 const new_flux = () => {
@@ -77,8 +79,8 @@ const new_flux = () => {
 }
 
 const go_new_flux = () =>{
-  step_store.flux_name = flux_name.value;
-  router.push({name:"new_flux", params:{project_name:project_name.value, flux_name:flux_name.value}})
+  step_store.flux_name = flux_name.value + "-0" ;
+  router.push({name:"new_flux"})
 }
 
 
@@ -92,6 +94,27 @@ onMounted (() => {
       router.push("/")
     }
     user_login.value=user
+
+    //LLEVAR A UNA FUNCION CARGAR TABLA
+    axios.post('/api/flow/getAll/'+ project_id.value.toString()).then((response) => {
+      let list_aux = response.data;
+      for (let proj of list_aux) {
+        list_fluxs.value.push({
+          "id": proj[0],
+          "name": proj[1],
+          "date": proj[2],
+          "state": proj[3],
+          "author": proj[4],
+        });
+      }
+
+    }).catch((error) => {
+      console.log(error)
+    })
+
+
+
+
   } catch (error) {
     router.push("/")
     console.log(error, 'error from decoding token')
@@ -103,7 +126,7 @@ const selectedItemId = ref(null);
 
 const filtrarElementos = computed(() => {
   const filtro = filtroTabla.value.toLowerCase();
-  return flux_store.list.filter((item) => {
+  return list_fluxs.value.filter((item) => {
     return (
         item.id?.toString().includes(filtro) ||
         item.name?.toLowerCase().includes(filtro) ||

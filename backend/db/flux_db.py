@@ -1,3 +1,4 @@
+import json
 import sqlite3
 
 from common.file_utils import FileUtils
@@ -8,7 +9,7 @@ def create_table_flux():
     cur = con.cursor()
     # Create table
     cur.execute('''CREATE TABLE fluxs
-                   (id INT,"flux_name", "date", "state", "user", "flux", id_project)''')
+                   (id INT,"flux_name", "date", "state", "user", "flux", id_project INT)''')
     con.commit()
     con.close()
 
@@ -16,17 +17,23 @@ def create_table_flux():
 def insert_flux(FluxSchema):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
+    proximo_id = get_id_max()+1
+    mi_json = json.loads(FluxSchema.flux)
+    id_project = int(mi_json['project_name'].split("-")[1])
     cur.execute(
-        f"INSERT INTO fluxs VALUES ('{FluxSchema.id}','{FluxSchema.flux_name}','{FluxSchema.date}', '{FluxSchema.state}', '{FluxSchema.user}', '{FluxSchema.flux}','{FluxSchema.id_project}',)")
+        f"INSERT INTO fluxs VALUES ({proximo_id},'{FluxSchema.flux_name}','{FluxSchema.date}', '{FluxSchema.state}', '{FluxSchema.user}', '{FluxSchema.flux}',{id_project})")
     con.commit()
     con.close()
+    return proximo_id
 
-def edit_flux(FluxSchema):
+
+
+def update_flux(FluxSchema, flow_id):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
     try:
         cur.execute(
-                f"UPDATE flujos SET flux='{FluxSchema.flux}' WHERE id = '{FluxSchema.id}'")
+                f"UPDATE flujos SET flux='{FluxSchema.flux}' WHERE id = {int(flow_id)}")
     except:
         print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL FLUJO")
     finally:
@@ -42,19 +49,19 @@ def get_flux(FluxSchema):
     con.close()
     return flux
 
-def get_fluxs_from_project(FluxSchema):
+def get_all_fluxs():
     con = sqlite3.connect(_DB)
     cur = con.cursor()
-    cur.execute(f"SELECT * FROM fluxs WHERE id_project='{FluxSchema.id_project}'")
+    cur.execute(f"SELECT * FROM fluxs")
     fluxs =cur.fetchall()
     con.close()
     return fluxs
 
 
-def get_all_flujos():
+def get_fluxs_from_project(project_id):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
-    cur.execute(f"SELECT * FROM fluxs")
+    cur.execute(f"SELECT * FROM fluxs WHERE id_project = {project_id}")
     fluxs = cur.fetchall()
     con.close()
     return fluxs
@@ -65,4 +72,12 @@ def delete_all_flujos():
     cur.execute(f"DELETE FROM fluxs")
     con.commit()
     con.close()
+
+def get_id_max():
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    cur.execute(f"SELECT MAX(id) FROM fluxs")
+    flux = cur.fetchone()
+    con.close()
+    return flux[0] if flux[0] != None else 0
 

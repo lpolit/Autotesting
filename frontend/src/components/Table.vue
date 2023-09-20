@@ -14,11 +14,12 @@
     <tbody>
     <tr v-for="item in items" :key="item.id">
       <td>{{ item.id }}</td>
-      <td style="cursor:pointer;" @click="go_flux(item.name)">{{ item.name }}</td>
+      <td style="cursor:pointer;" @click="go_flux(item.name, item.id)">{{ item.name }}</td>
       <td>
-        <img style="cursor:pointer; width: 22px; margin-right: 8px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
-        <img style="cursor:pointer; width: 22px; margin-right: 12px;" src="../icons/stop-fill.svg" @click="stop"/>
-        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.name)"/>
+
+        <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 8px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
+        <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 12px;" src="../icons/stop-fill.svg" @click="stop"/>
+        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.id)"/>
       </td>
       <td>{{ item.date }}</td>
       <td>{{ item.state }}</td>
@@ -35,6 +36,7 @@
 import router from "@/router";
 import axios from "axios";
 import {useStepStore} from "@/stores/steps";
+import {ref} from "vue/dist/vue";
 
 const props = defineProps({
   items: Array,
@@ -44,10 +46,14 @@ const step_store = useStepStore();
 
 
 
-const go_flux = (name:string)=> {
+const go_flux = (name:string, id:number)=> {
   if(props.store.$id == "project"){
-    step_store.project_name = name;
-    router.push({name:"home_flux", params:{project_name: name}})
+    step_store.project_name = name + "-" + id;
+    router.push({name:"home_flux"})
+  }else{
+    step_store.project_name = name + "-" + id;
+    step_store.flux_name = name + "-" + id;
+    router.push({name:"new_flux"})
   }
 }
 
@@ -60,21 +66,24 @@ const new_flux = () => {
 
 
 
-const editar = (nombre_flujo: any) => {
-  const path = '/api/flow/abrir'
-  const json = {
-    "name": nombre_flujo,
-    "flux": "",
-    "user":sessionStorage.getItem("user")
-  };
-
-  axios.post(path, json).then((response) => {
-    sessionStorage.setItem("steps",response.data)
-    step_store.$dispose()
-    router.push("new_flux")
-  }).catch((error) => {
-    console.log(error)
-  })
+const editar = (id: any) => {
+  if(props.store.$id == "project"){
+    props.modal_value = true;
+  }
+  // const path = '/api/flow/abrir'
+  // const json = {
+  //   "name": nombre_flujo,
+  //   "flux": "",
+  //   "user":sessionStorage.getItem("user")
+  // };
+  //
+  // axios.post(path, json).then((response) => {
+  //   sessionStorage.setItem("steps",response.data)
+  //   step_store.$dispose()
+  //   router.push("new_flux")
+  // }).catch((error) => {
+  //   console.log(error)
+  // })
 
 }
 </script>

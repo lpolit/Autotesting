@@ -119,10 +119,20 @@ def get_projects_user_name(username: str):
 
 
 ### FLOW SERVICE ########
-@app.post("/flow/getAll")
-def flow():
+@app.post("/flow/getAll/{project_id}")
+def get_all_flow_from_project(project_id: str):
     try:
-        flujos = fluxDb.get_all_flujos()
+        flujos = fluxDb.get_fluxs_from_project(int(project_id))
+        return flujos
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+@app.post("/flow/getAll")
+def get_all_flow():
+    try:
+        flujos = fluxDb.get_all_fluxs()
         return flujos
     except Exception as e:
         raise HTTPException(
@@ -153,10 +163,10 @@ def flow(comando: Comando):
             detail=f"Error: {e}",
         )
 
-@app.post("/flow/save")
-def flow(flux: FluxSchema):
+@app.post("/flow/save/{flow_id}")
+def flow_update(flux: FluxSchema, flow_id: str):
     try:
-        fluxDb.save_flux(flux)
+        fluxDb.update_flux()(flux, flow_id)
         return "Guardado Exitoso"
     except Exception as e:
         raise HTTPException(
@@ -164,8 +174,19 @@ def flow(flux: FluxSchema):
             detail=f"Error: {e}",
         )
 
+@app.post("/flow/save")
+def flow_insert(flux: FluxSchema):
+    try:
+        id_flux = fluxDb.insert_flux(flux)
+        return id_flux;
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
 @app.post("/flow/abrir")
-def flow(flux: FluxSchema):
+def flow_abrir(flux: FluxSchema):
     try:
         flujo = fluxDb.get_flux(flux)
         return flujo[1]

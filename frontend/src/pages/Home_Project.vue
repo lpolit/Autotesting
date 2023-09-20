@@ -18,7 +18,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita :items="filtrarElementos" :store="project_store"/>
+        <tablita :items="filtrarElementos" :store="project_store" />
       </div>
       <MDBModal
           id="modal"
@@ -54,7 +54,6 @@ import {
   MDBModalBody,
   MDBModalFooter
 } from "mdb-vue-ui-kit";
-
 const modal = ref();
 const project_name = ref("");
 const project_store = useProjectStore();
@@ -128,21 +127,9 @@ onMounted (() => {
   }).catch((error) => {
     console.log(error)
   })
-
-
-
-
-
-
-
-
-
-
-
 })
 
 const filtroTabla = ref("");
-const selectedItemId = ref(null);
 
 const filtrarElementos = computed(() => {
   const filtro = filtroTabla.value.toLowerCase();

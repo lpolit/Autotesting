@@ -12,8 +12,8 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a>{{step_store.project_name}}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{step_store.flux_name}}</li>
+      <li class="breadcrumb-item" ><a>{{project_name}}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{flux_name}}</li>
     </ol>
   </nav>
 <!--  <a value="Volver" @click="volver">Volver</a>-->
@@ -217,8 +217,10 @@ import router from "@/router";
 
 
 const step_store = useStepStore();
-const project_name = ref(router.currentRoute.value.params.project_name);
-const flux_name = ref(router.currentRoute.value.params.flux_name);
+const project_name = ref(step_store.project_name.split("-")[0]);
+const project_id = ref(step_store.project_name.split("-")[1]);
+const flux_name = ref(step_store.flux_name.split("-")[0]);
+const flux_id = ref(step_store.flux_name.split("-")[1]);
 
 const modal = ref(false);
 const excluded_steps = [7, 21];
@@ -255,17 +257,13 @@ const list_components = [
   {"id": 22, "value": If}
 ];
 
-const user_login = ref(String);
+const user_login = ref(sessionStorage.getItem("user"));
 
 onMounted (() => {
   try {
-    let user = sessionStorage.getItem("user")
-    if (user == "" || user == null){
+    if (user_login.value == "" || user_login.value == null){
       router.push("/")
     }
-
-    user_login.value=user
-    flux_name.value=step_store.name_flux
 
     //PREGUNTAR POR EL ULTIMO ORDEN QUE HAY EN EL SESSIONSTORAGE y SETEARLO A orden_step
     if(step_store.list_steps.steps.length!=0){
@@ -428,16 +426,27 @@ const set_name = () => {
 }
 
 const guardar_flujo = () => {
-  const path = '/api/flow/save'
+  let path = ''
+  if (flux_id.value=="0") {
+    path = '/api/flow/save'
+  }else{
+    path = '/api/flow/save/'+ flow_id.toString();
+  }
+
+  const date_aux = new Date();
+  const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
   const json = {
-    "name": flux_name.value,
+    "flux_name": flux_name.value,
+    "date":date,
+    "state":"-",
     "flux": sessionStorage.getItem("steps"),
-    "user": user_login.value
+    "user": user_login.value,
+    "project_id": project_id.value
   };
 
   axios.post(path, json).then((response) => {
-    console.log(response.data)
-    alert("guardado exitoso")
+    step_store.flux_name = flux_name.value +"-"+ response.data;
+    alert("Guardado Exitoso")
   }).catch((error) => {
     console.log(error)
   })
