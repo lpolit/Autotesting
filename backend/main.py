@@ -84,7 +84,7 @@ async def root():
 
 ### PROJECT SERVICE ###
 @app.post("/project/insert")
-def flow(project: ProjectSchema):
+def insert_project(project: ProjectSchema):
     try:
         id_project = projectDb.insert_project(project)
         return id_project
@@ -94,8 +94,20 @@ def flow(project: ProjectSchema):
             detail=f"Error: {e}",
         )
 
+@app.post("/project/update/{project_id}")
+def update_project(project_id: str, project: ProjectSchema):
+    try:
+        id_project = projectDb.update_project(project, int(project_id))
+        return id_project
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
+
+
 @app.post("/project/getAll")
-def flow():
+def get_all_projects():
     try:
         projects = projectDb.get_all_projects()
         return projects

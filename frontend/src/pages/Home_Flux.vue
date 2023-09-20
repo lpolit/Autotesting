@@ -24,7 +24,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita :items="filtrarElementos" :store="flux_store"/>
+        <tablita  :items="filtrarElementos" :store="flux_store"/>
       </div>
       <MDBModal
           id="modal"
@@ -64,14 +64,13 @@ import {
 import {useStepStore} from "@/stores/steps";
 
 const modal = ref();
-
 const flux_store = useFluxStore();
 const step_store = useStepStore();
 const project_name = ref(step_store.project_name.split("-")[0]);
 const project_id = ref(step_store.project_name.split("-")[1]);
 const flux_name = ref(step_store.flux_name);
 const list_fluxs = ref ([])
-
+const user_login = ref(sessionStorage.getItem("user"));
 
 const new_flux = () => {
   flux_name.value = "";
@@ -83,18 +82,11 @@ const go_new_flux = () =>{
   router.push({name:"new_flux"})
 }
 
-
-
-const user_login = ref(String);
-
 onMounted (() => {
   try {
-    let user = sessionStorage.getItem("user")
-    if (user == "" || user == null){
+    if (user_login.value == "" || user_login.value == null){
       router.push("/")
     }
-    user_login.value=user
-
     //LLEVAR A UNA FUNCION CARGAR TABLA
     axios.post('/api/flow/getAll/'+ project_id.value.toString()).then((response) => {
       let list_aux = response.data;

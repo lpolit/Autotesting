@@ -25,6 +25,17 @@ def insert_project(ProjectSchema):
         con.close()
     return proximo_id;
 
+def update_project(ProjectSchema, project_id):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    try:
+        cur.execute(f"UPDATE projects SET project_name='{ProjectSchema.project_name}', date='{ProjectSchema.date}' WHERE id={project_id}")
+    except:
+        print("FALLO AL UPDATEAR EL PROYECTO")
+    finally:
+        con.commit()
+        con.close()
+    return project_id;
 
 def get_project(ProjectSchema):
     con = sqlite3.connect(_DB)

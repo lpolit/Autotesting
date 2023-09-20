@@ -9,7 +9,7 @@
       <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
     </div>
   </header>
-
+  {{modal_value}}
   <div class="page-container">
     <div class="page-content">
       <navbar class="flex-container" >
@@ -18,7 +18,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita :items="filtrarElementos" :store="project_store" />
+        <tablita @onEdit="edit_project" :items="filtrarElementos"  :store="project_store" />
       </div>
       <MDBModal
           id="modal"
@@ -33,7 +33,7 @@
         </MDBModalBody>
         <MDBModalFooter>
           <button @click="modal.value=false" class="btn btn-danger">Cancel</button>
-          <button @click="save_new_project" class="btn btn-primary">Aceptar</button>
+          <button @click="save_project" class="btn btn-primary">Aceptar</button>
         </MDBModalFooter>
       </MDBModal>
 
@@ -54,10 +54,13 @@ import {
   MDBModalBody,
   MDBModalFooter
 } from "mdb-vue-ui-kit";
+import {nextTick} from "vue/dist/vue";
 const modal = ref();
 const project_name = ref("");
+const project_id = ref (0);
 const project_store = useProjectStore();
 const list_projects = ref([])
+const modal_value = ref(false)
 
 
 const new_project = () => {
@@ -65,7 +68,7 @@ const new_project = () => {
   modal.value = true;
 }
 
-const save_new_project = () => {
+const save_project = () => {
 
   const date_aux = new Date();
   const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
@@ -73,27 +76,32 @@ const save_new_project = () => {
   const author = user_login;
 
   modal.value = false;
+  let path = '/api/project/insert';
 
-  const path = '/api/project/insert'
+  if (project_id.value!=0) {
+    path = '/api/project/update/'+project_id.value;
+  }
   const json = {
-    "project_name": project_name.value,
-    "date": date,
-    "state": state,
-    "user": user_login.value
-  };
-
-  axios.post(path, json).then((response) => {
-    console.log(response.data)
-    list_projects.value.push({
-      "id": response.data,
-      "name": project_name.value,
+      "project_name": project_name.value,
       "date": date,
       "state": state,
-      "author": author
-    });
-  }).catch((error) => {
-    console.log(error)
-  })
+      "user": user_login.value
+    };
+
+    axios.post(path, json).then((response) => {
+      console.log(response.data)
+      alert("proceso Exitoso")
+      list_projects.value.push({
+        "id": response.data,
+        "name": project_name.value,
+        "date": date,
+        "state": state,
+        "author": author
+      });
+    }).catch((error) => {
+      console.log(error)
+    })
+
 
 }
 
@@ -143,6 +151,14 @@ const filtrarElementos = computed(() => {
     );
   });
 });
+
+const edit_project = (state: any, id: any, pjt_name: any) => {
+  project_name.value = pjt_name;
+  project_id.value = id;
+  modal.value = state
+}
+
+
 
 </script>
 <style>

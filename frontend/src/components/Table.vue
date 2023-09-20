@@ -19,7 +19,7 @@
 
         <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 8px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
         <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 12px;" src="../icons/stop-fill.svg" @click="stop"/>
-        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.id)"/>
+        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.id, item.name)"/>
       </td>
       <td>{{ item.date }}</td>
       <td>{{ item.state }}</td>
@@ -43,7 +43,7 @@ const props = defineProps({
   store: Object
 })
 const step_store = useStepStore();
-
+const emit = defineEmits(['onEdit'])
 
 
 const go_flux = (name:string, id:number)=> {
@@ -66,9 +66,9 @@ const new_flux = () => {
 
 
 
-const editar = (id: any) => {
+const editar = (id: any, project_name: any) => {
   if(props.store.$id == "project"){
-    props.modal_value = true;
+    emit('onEdit',true, id, project_name)
   }
   // const path = '/api/flow/abrir'
   // const json = {
