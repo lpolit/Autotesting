@@ -63,6 +63,15 @@ def get_all_projects_for_user(username):
     con.close()
     return projects
 
+def delete_project(id_project: int):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    cur.execute(f"DELETE FROM projects WHERE id = {id_project}")
+    con.commit()
+    con.close()
+    return id_project
+
+
 def delete_all_projects():
     con = sqlite3.connect(_DB)
     cur = con.cursor()

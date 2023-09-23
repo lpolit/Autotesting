@@ -12,7 +12,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active"><a>{{project_name}}</a></li>
+      <li class="breadcrumb-item"><a href="/#/home_project">{{project_name}}</a></li>
     </ol>
   </nav>
 
@@ -24,7 +24,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita  :items="filtrarElementos" :store="flux_store"/>
+        <tablita @onEdit="edit_flux" @onDelete="delete_flux" :project_name="project_name" :items="filtrarElementos" :store="flux_store"/>
       </div>
       <MDBModal
           id="modal"
@@ -39,7 +39,8 @@
         </MDBModalBody>
         <MDBModalFooter>
           <button @click="modal.value=false" class="btn btn-danger">Cancel</button>
-          <button @click="go_new_flux" class="btn btn-primary">Aceptar</button>
+          <button @click="save_flux" class="btn btn-primary">Guardar</button>
+<!--          <button @click="go_flux" class="btn btn-primary">Guardar e Ir</button>-->
         </MDBModalFooter>
       </MDBModal>
 
@@ -68,18 +69,73 @@ const flux_store = useFluxStore();
 const step_store = useStepStore();
 const project_name = ref(step_store.project_name.split("-")[0]);
 const project_id = ref(step_store.project_name.split("-")[1]);
-const flux_name = ref(step_store.flux_name);
+const flux_name = ref("");
+const flux_id = ref(0);
 const list_fluxs = ref ([])
 const user_login = ref(sessionStorage.getItem("user"));
 
+
 const new_flux = () => {
   flux_name.value = "";
+  flux_id.value = 0;
   modal.value = true;
 }
 
-const go_new_flux = () =>{
-  step_store.flux_name = flux_name.value + "-0" ;
-  router.push({name:"new_flux"})
+const save_flux = ()=> {
+  modal.value = false;
+  let path = '';
+
+  if (flux_id.value!=0) {
+    path = '/api/flow/update/'+flux_id.value+'/'+ flux_name.value;
+    axios.post(path).then((response) => {
+      console.log(response.data)
+      alert("Se Modifico Correctamente")
+      load_table()
+    }).catch((error) => {
+      console.log(error)
+    })
+  }else{
+    const date_aux = new Date();
+    const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
+    const state = "-";
+    path = '/api/flow/insert';
+
+    const json = {
+      "flux_name": flux_name.value,
+      "date": date,
+      "state": state,
+      "flux": " ",
+      "user": user_login.value,
+      "project_id": project_id.value
+    };
+
+    axios.post(path, json).then((response) => {
+      console.log(response.data)
+      alert("Creacion Exitosa")
+      load_table()
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+}
+
+const load_table =() =>{
+  list_fluxs.value=[]
+  axios.post('/api/flow/getAll/'+ project_id.value.toString()).then((response) => {
+    let list_aux = response.data;
+    for (let proj of list_aux) {
+      list_fluxs.value.push({
+        "id": proj[0],
+        "name": proj[1],
+        "date": proj[2],
+        "state": proj[3],
+        "author": proj[4],
+      });
+    }
+
+  }).catch((error) => {
+    console.log(error)
+  })
 }
 
 onMounted (() => {
@@ -87,35 +143,14 @@ onMounted (() => {
     if (user_login.value == "" || user_login.value == null){
       router.push("/")
     }
-    //LLEVAR A UNA FUNCION CARGAR TABLA
-    axios.post('/api/flow/getAll/'+ project_id.value.toString()).then((response) => {
-      let list_aux = response.data;
-      for (let proj of list_aux) {
-        list_fluxs.value.push({
-          "id": proj[0],
-          "name": proj[1],
-          "date": proj[2],
-          "state": proj[3],
-          "author": proj[4],
-        });
-      }
-
-    }).catch((error) => {
-      console.log(error)
-    })
-
-
-
-
   } catch (error) {
     router.push("/")
     console.log(error, 'error from decoding token')
   }
+  load_table();
 })
 
 const filtroTabla = ref("");
-const selectedItemId = ref(null);
-
 const filtrarElementos = computed(() => {
   const filtro = filtroTabla.value.toLowerCase();
   return list_fluxs.value.filter((item) => {
@@ -129,8 +164,35 @@ const filtrarElementos = computed(() => {
   });
 });
 
+
+const edit_flux = (state: any, id: any, flx_name: any) => {
+  flux_name.value = flx_name;
+  flux_id.value = id;
+  modal.value = state
+}
+
+const delete_flux = (id: any,) => {
+
+  const path = '/api/flux/delete/'+id;
+
+  axios.delete(path).then((response) => {
+    console.log(response.data)
+    alert("proceso Exitoso")
+
+    load_table()
+  }).catch((error) => {
+    console.log(error)
+  })
+
+
+}
+
+
 </script>
 <style>
+a {
+  text-decoration: none;
+}
 .page-container {
   display: flex;
   flex-direction: column;

@@ -9,7 +9,6 @@
       <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
     </div>
   </header>
-  {{modal_value}}
   <div class="page-container">
     <div class="page-content">
       <navbar class="flex-container" >
@@ -18,7 +17,7 @@
       </navbar>
       <div>
         <input v-model="filtroTabla" placeholder="Filtrar por nombre"/>
-        <tablita @onEdit="edit_project" :items="filtrarElementos"  :store="project_store" />
+        <tablita @onEdit="edit_project" @onDelete="delete_project" :items="filtrarElementos"  :store="project_store" />
       </div>
       <MDBModal
           id="modal"
@@ -91,13 +90,7 @@ const save_project = () => {
     axios.post(path, json).then((response) => {
       console.log(response.data)
       alert("proceso Exitoso")
-      list_projects.value.push({
-        "id": response.data,
-        "name": project_name.value,
-        "date": date,
-        "state": state,
-        "author": author
-      });
+      load_table()
     }).catch((error) => {
       console.log(error)
     })
@@ -107,19 +100,8 @@ const save_project = () => {
 
 const user_login = ref(String);
 
-onMounted (() => {
-  try {
-    let user = sessionStorage.getItem("user")
-    if (user == "" || user == null){
-      router.push("/")
-    }
-    user_login.value=user
-  } catch (error) {
-    router.push("/")
-    console.log(error, 'error from decoding token')
-  }
-
-  //LLEVAR A UNA FUNCION CARGAR TABLA
+const load_table = () =>{
+  list_projects.value = []
   axios.post('/api/project/getAll/'+ user_login.value).then((response) => {
     let list_aux = response.data;
     for (let proj of list_aux) {
@@ -131,10 +113,24 @@ onMounted (() => {
         "author": proj[4],
       });
     }
-
   }).catch((error) => {
     console.log(error)
   })
+}
+onMounted (() => {
+  try {
+    let user = sessionStorage.getItem("user")
+    if (user == "" || user == null){
+      router.push("/")
+    }
+    user_login.value=user
+
+  } catch (error) {
+    router.push("/")
+    console.log(error, 'error from decoding token')
+  }
+  load_table();
+
 })
 
 const filtroTabla = ref("");
@@ -156,6 +152,23 @@ const edit_project = (state: any, id: any, pjt_name: any) => {
   project_name.value = pjt_name;
   project_id.value = id;
   modal.value = state
+}
+
+
+const delete_project = (id: any,) => {
+
+  const path = '/api/project/delete/'+id;
+
+  axios.delete(path).then((response) => {
+    console.log(response.data)
+    alert("proceso Exitoso")
+
+    load_table()
+  }).catch((error) => {
+    console.log(error)
+  })
+
+
 }
 
 

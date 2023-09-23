@@ -12,8 +12,8 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item" ><a>{{project_name}}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{flux_name}}</li>
+      <li class="breadcrumb-item"><a href="/#/home_project">{{project_name}}</a></li>
+      <li class="breadcrumb-item" aria-current="page"><a href="/#/home_flux">{{flux_name}}</a></li>
     </ol>
   </nav>
 <!--  <a value="Volver" @click="volver">Volver</a>-->
@@ -421,18 +421,9 @@ const detener_flujo = () => {
   })
 }
 
-const set_name = () => {
-  step_store.name_flux = flux_name.value
-}
 
 const guardar_flujo = () => {
-  let path = ''
-  if (flux_id.value=="0") {
-    path = '/api/flow/save'
-  }else{
-    path = '/api/flow/save/'+ flow_id.toString();
-  }
-
+  const path = '/api/flow/update/'+ flux_id.value;
   const date_aux = new Date();
   const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
   const json = {
@@ -445,21 +436,14 @@ const guardar_flujo = () => {
   };
 
   axios.post(path, json).then((response) => {
-    step_store.flux_name = flux_name.value +"-"+ response.data;
     alert("Guardado Exitoso")
   }).catch((error) => {
     console.log(error)
   })
 }
 
-const volver = () => {
-  step_store.$reset()
-  //sessionStorage.clear()
-  router.push("/home")
-}
 const log_out = () => {
   step_store.$reset()
-  //sessionStorage.clear()
   router.push("/")
 }
 
@@ -514,7 +498,9 @@ const toogle_sidebar = (type: string) => {
 </script>
 
 <style>
-
+a{
+  text-decoration: none;
+}
 body {
   height: 800px;
 }

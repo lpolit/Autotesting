@@ -18,22 +18,30 @@ def insert_flux(FluxSchema):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
     proximo_id = get_id_max()+1
-    mi_json = json.loads(FluxSchema.flux)
-    id_project = int(mi_json['project_name'].split("-")[1])
     cur.execute(
-        f"INSERT INTO fluxs VALUES ({proximo_id},'{FluxSchema.flux_name}','{FluxSchema.date}', '{FluxSchema.state}', '{FluxSchema.user}', '{FluxSchema.flux}',{id_project})")
+        f"INSERT INTO fluxs VALUES ({proximo_id},'{FluxSchema.flux_name}','{FluxSchema.date}', '{FluxSchema.state}', '{FluxSchema.user}', '{FluxSchema.flux}',{int(FluxSchema.project_id)})")
     con.commit()
     con.close()
     return proximo_id
 
-
+def update_name_flux(flux_name, flow_id):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    try:
+        cur.execute(
+                f"UPDATE fluxs SET flux_name='{flux_name}' WHERE id = {int(flow_id)}")
+    except:
+        print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL FLUJO")
+    finally:
+        con.commit()
+        con.close()
 
 def update_flux(FluxSchema, flow_id):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
     try:
         cur.execute(
-                f"UPDATE flujos SET flux='{FluxSchema.flux}' WHERE id = {int(flow_id)}")
+                f"UPDATE fluxs SET flux='{FluxSchema.flux}' WHERE id = {int(flow_id)}")
     except:
         print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL FLUJO")
     finally:
@@ -41,10 +49,10 @@ def update_flux(FluxSchema, flow_id):
         con.close()
 
 
-def get_flux(FluxSchema):
+def get_flux(id_flux):
     con = sqlite3.connect(_DB)
     cur = con.cursor()
-    cur.execute(f"SELECT * FROM fluxs WHERE flux_name='{FluxSchema.name}' and user ='{FluxSchema.user}'")
+    cur.execute(f"SELECT * FROM fluxs WHERE id='{id_flux}'")
     flux =cur.fetchone()
     con.close()
     return flux

@@ -14,12 +14,15 @@
     <tbody>
     <tr v-for="item in items" :key="item.id">
       <td>{{ item.id }}</td>
-      <td style="cursor:pointer;" @click="go_flux(item.name, item.id)">{{ item.name }}</td>
+      <td style="cursor:pointer;" @click="go(item.name, item.id)">{{ item.name }}</td>
       <td>
 
-        <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 8px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
-        <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 12px;" src="../icons/stop-fill.svg" @click="stop"/>
-        <img style="cursor:pointer" src="../icons/pen-fill.svg" @click="editar(item.id, item.name)"/>
+        <img style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/go.svg"  @click="go(item.name, item.id)"/>
+        <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
+        <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/stop-fill.svg" @click="stop"/>
+        <img style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/pen-fill.svg" @click="editar(item.id, item.name)"/>
+        <img v-if="props.store.$id == 'project'" style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/delete.svg" @click="eliminar(item.id)" />
+
       </td>
       <td>{{ item.date }}</td>
       <td>{{ item.state }}</td>
@@ -40,20 +43,28 @@ import {ref} from "vue/dist/vue";
 
 const props = defineProps({
   items: Array,
-  store: Object
+  store: Object,
+  project_name: String
 })
 const step_store = useStepStore();
-const emit = defineEmits(['onEdit'])
+const emit = defineEmits(['onEdit', 'onDelete'])
 
 
-const go_flux = (name:string, id:number)=> {
+const go = (name:string, id:number)=> {
   if(props.store.$id == "project"){
     step_store.project_name = name + "-" + id;
     router.push({name:"home_flux"})
   }else{
-    step_store.project_name = name + "-" + id;
     step_store.flux_name = name + "-" + id;
-    router.push({name:"new_flux"})
+
+    const path = '/api/flow/abrir/'+id
+    axios.post(path).then((response) => {
+      sessionStorage.setItem("steps",response.data)
+      step_store.$dispose()
+      router.push("new_flux")
+    }).catch((error) => {
+      console.log(error)
+    })
   }
 }
 
@@ -66,24 +77,14 @@ const new_flux = () => {
 
 
 
-const editar = (id: any, project_name: any) => {
-  if(props.store.$id == "project"){
-    emit('onEdit',true, id, project_name)
-  }
-  // const path = '/api/flow/abrir'
-  // const json = {
-  //   "name": nombre_flujo,
-  //   "flux": "",
-  //   "user":sessionStorage.getItem("user")
-  // };
-  //
-  // axios.post(path, json).then((response) => {
-  //   sessionStorage.setItem("steps",response.data)
-  //   step_store.$dispose()
-  //   router.push("new_flux")
-  // }).catch((error) => {
-  //   console.log(error)
-  // })
+const editar = (id: any, name: any) => {
+    emit('onEdit',true, id, name)
 
+}
+
+const eliminar = (id: any) => {
+  if (props.store.$id == "project") {
+    emit('onDelete', id)
+  }
 }
 </script>
