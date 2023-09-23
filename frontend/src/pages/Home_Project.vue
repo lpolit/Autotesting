@@ -31,8 +31,25 @@
           <input placeholder="Ingrese el nombre del Projecto" :autofocus="true" v-model="project_name"/>
         </MDBModalBody>
         <MDBModalFooter>
-          <button @click="modal.value=false" class="btn btn-danger">Cancel</button>
+          <button @click="set_modal(false)" class="btn btn-danger">Cancel</button>
           <button @click="save_project" class="btn btn-primary">Aceptar</button>
+        </MDBModalFooter>
+      </MDBModal>
+
+      <MDBModal
+          id="modal_delete"
+          tabindex="-1"
+          v-model="modal_delete"
+      >
+        <MDBModalHeader>
+          <MDBModalTitle> Eliminar Proyecto </MDBModalTitle>
+        </MDBModalHeader>
+        <MDBModalBody>
+          <label>Puede que el proyecto tenga flujos asociados. ¿Esta seguro que desea eliminar el proyecto?</label>
+        </MDBModalBody>
+        <MDBModalFooter>
+          <button @click="set_modal_delete(false)" class="btn btn-danger">Cancel</button>
+          <button @click="delete_project_db" class="btn btn-primary">Aceptar</button>
         </MDBModalFooter>
       </MDBModal>
 
@@ -55,6 +72,7 @@ import {
 } from "mdb-vue-ui-kit";
 import {nextTick} from "vue/dist/vue";
 const modal = ref();
+const modal_delete = ref();
 const project_name = ref("");
 const project_id = ref (0);
 const project_store = useProjectStore();
@@ -64,7 +82,7 @@ const modal_value = ref(false)
 
 const new_project = () => {
   project_name.value = "";
-  modal.value = true;
+  set_modal(true);
 }
 
 const save_project = () => {
@@ -74,7 +92,8 @@ const save_project = () => {
   const state = "-";
   const author = user_login;
 
-  modal.value = false;
+  set_modal(false);
+  set_modal(false);
   let path = '/api/project/insert';
 
   if (project_id.value!=0) {
@@ -89,7 +108,6 @@ const save_project = () => {
 
     axios.post(path, json).then((response) => {
       console.log(response.data)
-      alert("proceso Exitoso")
       load_table()
     }).catch((error) => {
       console.log(error)
@@ -151,26 +169,31 @@ const filtrarElementos = computed(() => {
 const edit_project = (state: any, id: any, pjt_name: any) => {
   project_name.value = pjt_name;
   project_id.value = id;
-  modal.value = state
+  set_modal(state)
+}
+const set_modal = (valor: boolean) =>{
+  modal.value = valor;
 }
 
+const set_modal_delete = (valor: boolean) =>{
+  modal_delete.value = valor;
+}
 
 const delete_project = (id: any,) => {
-
-  const path = '/api/project/delete/'+id;
+  project_id.value = id;
+  set_modal_delete(true);
+}
+const delete_project_db = () => {
+  const path = '/api/project/delete/' + project_id.value;
 
   axios.delete(path).then((response) => {
     console.log(response.data)
-    alert("proceso Exitoso")
-
     load_table()
   }).catch((error) => {
     console.log(error)
   })
-
-
+  set_modal_delete(false)
 }
-
 
 
 </script>

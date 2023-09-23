@@ -74,6 +74,14 @@ def get_fluxs_from_project(project_id):
     con.close()
     return fluxs
 
+def delete_flux(flux_id: int):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    cur.execute(f"DELETE FROM fluxs WHERE id = {flux_id}")
+    con.commit()
+    con.close()
+    return flux_id
+
 def delete_all_flujos():
     con = sqlite3.connect(_DB)
     cur = con.cursor()

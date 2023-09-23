@@ -103,7 +103,8 @@
         >
           <transition-group>
             <div class="card-image" v-for="(st, index) in step_store.list_steps.steps" :key="st.id">
-              <div class="icon-position mx-4">
+              <div class="icon-position mx-6">
+                Paso{{st.orden}}
                 <Icon v-if="st.status === 'OK'" icon="check_circle"/>
                 <Icon v-if="st.status === 'ERROR'" icon="error"/>
                 <Icon v-if="st.status === 'WARNING'" icon="warning"/>
@@ -534,8 +535,10 @@ body {
 }
 
 .card-header{
-  color: whitesmoke;
+  color: aliceblue;
   cursor: pointer;
+  font-weight: bold;
+  background-color: slategray;
 }
 .card-header-ok {
   background-color: green !important;

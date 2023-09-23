@@ -163,6 +163,16 @@ def get_all_flow():
             detail=f"Error: {e}",
         )
 
+@app.delete("/flow/delete/{flux_id}")
+def delete_flux(flux_id: str):
+    try:
+        id_flux = fluxDb.delete_flux(int(flux_id))
+        return id_flux;
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
 @app.delete("/flow/deleteAll")
 def flow():
     try:

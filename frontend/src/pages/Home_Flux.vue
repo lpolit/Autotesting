@@ -38,9 +38,25 @@
           <input placeholder="Ingrese el nombre del Flujo" :autofocus="true" v-model="flux_name"/>
         </MDBModalBody>
         <MDBModalFooter>
-          <button @click="modal.value=false" class="btn btn-danger">Cancel</button>
+          <button @click="set_modal(false)" class="btn btn-danger">Cancel</button>
           <button @click="save_flux" class="btn btn-primary">Guardar</button>
 <!--          <button @click="go_flux" class="btn btn-primary">Guardar e Ir</button>-->
+        </MDBModalFooter>
+      </MDBModal>
+      <MDBModal
+          id="modal_delete"
+          tabindex="-1"
+          v-model="modal_delete"
+      >
+        <MDBModalHeader>
+          <MDBModalTitle> Eliminar Flujo </MDBModalTitle>
+        </MDBModalHeader>
+        <MDBModalBody>
+          <label>¿Esta seguro que desea eliminar el Flujo?</label>
+        </MDBModalBody>
+        <MDBModalFooter>
+          <button @click="set_modal_delete(false)" class="btn btn-danger">Cancel</button>
+          <button @click="delete_flux_db" class="btn btn-primary">Aceptar</button>
         </MDBModalFooter>
       </MDBModal>
 
@@ -65,6 +81,7 @@ import {
 import {useStepStore} from "@/stores/steps";
 
 const modal = ref();
+const modal_delete = ref();
 const flux_store = useFluxStore();
 const step_store = useStepStore();
 const project_name = ref(step_store.project_name.split("-")[0]);
@@ -78,11 +95,11 @@ const user_login = ref(sessionStorage.getItem("user"));
 const new_flux = () => {
   flux_name.value = "";
   flux_id.value = 0;
-  modal.value = true;
+  set_modal(true);
 }
 
 const save_flux = ()=> {
-  modal.value = false;
+  set_modal(false);
   let path = '';
 
   if (flux_id.value!=0) {
@@ -168,22 +185,34 @@ const filtrarElementos = computed(() => {
 const edit_flux = (state: any, id: any, flx_name: any) => {
   flux_name.value = flx_name;
   flux_id.value = id;
-  modal.value = state
+  set_modal(state)
 }
 
-const delete_flux = (id: any,) => {
+const set_modal = (valor: boolean) =>{
+  modal.value = valor;
+}
 
-  const path = '/api/flux/delete/'+id;
+const set_modal_delete = (valor: boolean) =>{
+  modal_delete.value = valor;
+}
+
+const delete_flux = (id: any) => {
+  flux_id.value = id;
+  set_modal_delete(true);
+}
+
+const delete_flux_db = () => {
+
+  const path = '/api/flow/delete/'+ flux_id.value;
 
   axios.delete(path).then((response) => {
     console.log(response.data)
-    alert("proceso Exitoso")
-
     load_table()
   }).catch((error) => {
     console.log(error)
   })
 
+  set_modal_delete(false);
 
 }
 

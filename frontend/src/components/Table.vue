@@ -18,10 +18,11 @@
       <td>
 
         <img style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/go.svg"  @click="go(item.name, item.id)"/>
+        <img style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/pen-fill.svg" @click="editar(item.id, item.name)"/>
+        <img style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/delete.svg" @click="eliminar(item.id)" />
         <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/play-fill.svg" @click="ejecutar_flujo"/>
         <img v-if="props.store.$id == 'flux'" style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/stop-fill.svg" @click="stop"/>
-        <img style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/pen-fill.svg" @click="editar(item.id, item.name)"/>
-        <img v-if="props.store.$id == 'project'" style="cursor:pointer; width: 22px; margin-right: 25px;" src="../icons/delete.svg" @click="eliminar(item.id)" />
+
 
       </td>
       <td>{{ item.date }}</td>
@@ -78,13 +79,10 @@ const new_flux = () => {
 
 
 const editar = (id: any, name: any) => {
-    emit('onEdit',true, id, name)
-
+  emit('onEdit',true, id, name)
 }
 
 const eliminar = (id: any) => {
-  if (props.store.$id == "project") {
-    emit('onDelete', id)
-  }
+  emit('onDelete', id)
 }
 </script>
