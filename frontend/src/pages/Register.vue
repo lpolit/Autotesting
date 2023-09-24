@@ -1,29 +1,30 @@
        <template>
          <div id="app">
-           <div id="login">
+           <div id="register">
              <div id="description">
                <img style="padding-top: 10px;" width="300" src="logo.png"/>
-               <p>Aca iria algun de slogan de la app allalalallalalallalal</p>
              </div>
              <div id="form">
-               <form @submit.prevent="doLogin">
+               <form @submit.prevent="doRegister">
+                 <label for="name">Nombre</label>
+                 <input type="text" id="name" v-model="name" placeholder="Ingrese un nombre" autocomplete="off">
+
                  <label for="email">Email</label>
                  <input type="text" id="email" v-model="email" placeholder="mail@example.com" autocomplete="off">
 
                  <label for="password">Contraseña</label>&nbsp;
                  <i class="fas" :class="[passwordFieldIcon]" @click="hidePassword = !hidePassword"></i>
                  <input :type="passwordFieldType" id="password" v-model="password" placeholder="**********">
-                 <input style="color: red; font-size: 10px;" id ="mensajeError" v-model="mensajeError"/>
-                 <button class="btn" type="submit">Ingresar</button>
-               </form>
-               <div class="col-5 mx-auto"  >
-                 <button  @click="go_register" style="margin-top: 15px; color:black; padding: 2px; font-size:12px" >
-                   Register
-                 </button>
 
-               </div>
-               <a class="btn btn-link" style="font-size: 12px; margin: 18px 0 0 13px">
-                 Olvido su Contraseña?
+                 <label for="confirm_password">Confirmar Contraseña</label>&nbsp;
+                 <i class="fas" :class="[passwordFieldIcon]" @click="hidePassword = !hidePassword"></i>
+                 <input :type="passwordFieldType" id="confirm_password" v-model="confirm_password" placeholder="**********">
+
+                 <input style="color: red; font-size: 10px;" id ="mensajeError" v-model="mensajeError"/>
+                 <button class="btn" type="submit">Registrarse</button>
+               </form>
+               <a href="#" class="btn btn-link" style="font-size: 12px; margin-top: 15px;">
+                 Loguearse
                </a>
              </div>
            </div>
@@ -36,10 +37,11 @@
        import {computed, onMounted, ref} from "vue";
        import axios from "axios";
 
-
+       const name = ref("");
        const email = ref("");
        const hidePassword = ref(true);
        const password = ref("");
+       const confirm_password = ref("");
        const mensajeError = ref("");
 
        const passwordFieldIcon = computed(() => hidePassword.value ? "fa-eye" : "fa-eye-slash");
@@ -49,29 +51,23 @@
          localStorage.setItem("user", "")
        })
 
-       const go_register = () => {
-         router.push("register")
-       }
-
-       const doLogin = async () => {
+       const doRegister = async () => {
 
          let json = {
+           "fullname": name.value,
            "email": email.value,
            "password": password.value
          }
 
-         const path = '/api/user/login'
+         const path = '/api/user/signup'
          await axios.post(path, json).then((response) => {
-           sessionStorage.setItem("user", email.value);
-           sessionStorage.setItem("Authorization",response.data["access token"])
-           router.push("home_project")
+           alert("Creacion Exitosa")
+           router.push("/")
          }).catch((error) => {
            mensajeError.value = "Usuario o clave Invalida"
            console.log(error)
          })
        }
-
-
 
        </script>
 
@@ -94,7 +90,7 @@
          height: 100%;
        }
 
-       div#app div#login {
+       div#app div#register {
          align-items: center;
          background-color: #e2e2e5;
          display: flex;
@@ -103,25 +99,25 @@
          height: 100%;
        }
 
-       div#app div#login div#description {
+       div#app div#register div#description {
          background-color: #ffffff;
          width: 350px;
          padding: 35px;
          height: 250px;
        }
 
-       div#app div#login div#description h1,
-       div#app div#login div#description p {
+       div#app div#register div#description h1,
+       div#app div#register div#description p {
          margin: 0;
        }
 
-       div#app div#login div#description p {
+       div#app div#register div#description p {
          font-size: 0.8em;
          color: #95a5a6;
          margin-top: 10px;
        }
 
-       div#app div#login div#form {
+       div#app div#register div#form {
          background-color: #34495e;
          border-radius: 5px;
          box-shadow: 0px 0px 30px 0px #666;
@@ -130,18 +126,18 @@
          padding: 35px;
        }
 
-       div#app div#login div#form label,
-       div#app div#login div#form input {
+       div#app div#register div#form label,
+       div#app div#register div#form input {
          outline: none;
          width: 100%;
        }
 
-       div#app div#login div#form label {
+       div#app div#register div#form label {
          color: #95a5a6;
          font-size: 0.8em;
        }
 
-       div#app div#login div#form input {
+       div#app div#register div#form input {
          background-color: transparent;
          border: none;
          color: #ecf0f1;
@@ -149,12 +145,12 @@
          margin-bottom: 20px;
        }
 
-       div#app div#login div#form ::placeholder {
+       div#app div#register div#form ::placeholder {
          color: #ecf0f1;
          opacity: 1;
        }
 
-       div#app div#login div#form button {
+       div#app div#register div#form button {
          background-color: #ffffff;
          cursor: pointer;
          border: none;
@@ -163,25 +159,25 @@
          width: 100%;
        }
 
-       div#app div#login div#form button:hover {
+       div#app div#register div#form button:hover {
          background-color: #eeeeee;
        }
 
        @media screen and (max-width: 600px) {
-         div#app div#login {
+         div#app div#register {
            align-items: unset;
            background-color: unset;
            display: unset;
            justify-content: unset;
          }
 
-         div#app div#login div#description {
+         div#app div#register div#description {
            margin: 0 auto;
            max-width: 350px;
            width: 100%;
          }
 
-         div#app div#login div#form {
+         div#app div#register div#form {
            border-radius: unset;
            box-shadow: unset;
            width: 100%;

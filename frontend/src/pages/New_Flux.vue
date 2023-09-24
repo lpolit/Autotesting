@@ -124,7 +124,7 @@
                   <MDBCardText class="description" v-html="st.description">
                   </MDBCardText>
 
-                  <a href="#" title="Eliminar paso">
+                  <a title="Eliminar paso">
                     <button class="btn btn-primary btn-align bin" @click="delete_card(index)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                            fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">

@@ -5,8 +5,8 @@ class AsserEquals(Step):
 
     def __init__(self, flow_id, args):
         super().__init__(flow_id)
-        self.actual_value = "actual_value"
-        self.expected_value = "expected_value"
+        self.actual_value = args["actual_value"]
+        self.expected_value = args["expected_value"]
 
 
 class AsserEqual(AsserEquals):

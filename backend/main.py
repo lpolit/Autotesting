@@ -245,7 +245,7 @@ def flow_abrir(id_flux: str):
 ##### USER SERVICE #############
 
 @app.post("/user/signup")
-def user_signup(user : UserSchema = Body(default=None)):
+def user_signup(user: UserSchema = Body(default=None)):
     userDb.insert_user(user)
     return signJWT(user.email)
 
@@ -257,7 +257,7 @@ def check_user(data: UserLoginSchema):
     return False
 
 @app.post("/user/login")
-def user_login(user : UserLoginSchema = Body(default=None)):
+def user_login(user: UserLoginSchema = Body(default=None)):
     if check_user(user):
         return signJWT(user.email)
     else:
@@ -282,30 +282,6 @@ def get_all_users():
 def flow():
     return {"HOLAAAAAAAAAAAAAAA"}
 
-
-
-# @app.post("/demo")
-# async def demo():
-#     flow_id=abrir_browser(opt={"browser":"chrome","url":"https://authhomo.afip.gob.ar/contribuyente_/login.xhtml","headless":False})
-#     _driver = plani[flow_id]
-#     click(flow_id, opt={"xpath": "//*[@id='F1:username']", "tipo": "izquierdo"})
-#     enviar_texto(flow_id, opt={"xpath":"//*[@id='F1:username']","texto":"20324037056"})
-#     click(flow_id, opt={"xpath": "//*[@id='F1:btnSiguiente']", "tipo": "izquierdo"})
-#     enviar_texto(flow_id, opt={"xpath":"//*[@id='F1:password']","texto":"Afip123456!"})
-#     click(flow_id, opt={"xpath": "//*[@id='F1:btnIngresar']", "tipo": "izquierdo"})
-#     click(flow_id, opt={"xpath": "//span[text()=' Mis Servicios']", "tipo": "izquierdo"})
-#     click(flow_id, opt={"xpath": "//div[@title='rcel']//h4", "tipo": "izquierdo"})
-#     esperar_a(flow_id,opt={"nro_ventanas":2})
-#     cambiar_ventana(flow_id, opt={"titulo":"RCEL"})
-#     click(flow_id, opt={"xpath": "//input[@value='20040831615-VGEPRUP GGAUI']", "tipo": "izquierdo"})
-#     click(flow_id, opt={"xpath": "//*[@id='btn_consultas']", "tipo": "izquierdo"})
-#     limpiar_campo(flow_id, opt={"xpath":"//*[@id='fed']"})
-#     enviar_texto(flow_id, opt={"xpath":"//*[@id='fed']","texto":"01/01/2021"})
-#     click(flow_id, opt={"xpath": "//option[@value='11']", "tipo": "izquierdo"})
-#     click(flow_id, opt={"xpath": "//input[@value='Buscar']", "tipo": "izquierdo"})
-#     verificar_existencia(flow_id,opt={"xpath":"//table[@class='jig_table']"})
-#     cerrar_browser(flow_id)
-#     return {"Flux finalizado OK"}
 
 if __name__ == "__main__":
     set_router_command()
