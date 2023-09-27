@@ -70,7 +70,6 @@ import {
   MDBModalBody,
   MDBModalFooter
 } from "mdb-vue-ui-kit";
-import {nextTick} from "vue/dist/vue";
 const modal = ref();
 const modal_delete = ref();
 const project_name = ref("");

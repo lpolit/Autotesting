@@ -22,7 +22,7 @@
   <div style="margin-left: 73%;">
 
     <a title="Ejecutar flujo" >
-      <button class="btn btn-primary" @click="ejecutar_flujo">
+      <button id="btn_ejecutar" class="btn btn-primary" @click="ejecutar_flujo" :disabled="is_disabled">
         <svg width="16" height="16" fill="currentColor"
              class="bi bi-play-fill" viewBox="0 0 16 16">
           <path
@@ -33,7 +33,7 @@
     </a>
 
     <a title="Detener flujo">
-      <button class="btn btn-primary" @click="detener_flujo">
+      <button id="btn_detener" class="btn btn-primary" @click="detener_flujo" :disabled="!is_disabled">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-stop-fill" viewBox="0 0 16 16">
           <path
@@ -43,7 +43,7 @@
     </a>
 
     <a title="Guardar flujo">
-      <button class="btn btn-primary"  @click="guardar_flujo">
+      <button id="btn_guardar" class="btn btn-primary"  @click="guardar_flujo" :disabled="is_disabled">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-save-fill" viewBox="0 0 16 16">
           <path
@@ -125,7 +125,7 @@
                   </MDBCardText>
 
                   <a title="Eliminar paso">
-                    <button class="btn btn-primary btn-align bin" @click="delete_card(index)">
+                    <button name="btn_eliminar_step" class="btn btn-primary btn-align bin" @click="delete_card(index)" :disabled="is_disabled">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                            fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                         <path
@@ -222,9 +222,10 @@ const project_name = ref(step_store.project_name.split("-")[0]);
 const project_id = ref(step_store.project_name.split("-")[1]);
 const flux_name = ref(step_store.flux_name.split("-")[0]);
 const flux_id = ref(step_store.flux_name.split("-")[1]);
-
+const is_disabled = ref (false);
 const modal = ref(false);
 const excluded_steps = [7, 21];
+let esta_detenido = false;
 let step = ref("");
 let orden_step = ref(0);
 let hijo = ref();
@@ -232,6 +233,7 @@ let flow_id = 0;
 let card_pos = 0;
 let show_sidebar = ref(false);
 let type_sidebar = ref();
+
 
 const list_components = [
   {"id": 1, "value": OpenBrowser},
@@ -383,35 +385,42 @@ const ejecutar_flujo = async () => {
   console.log(step_store.list_steps)
   const path = '/api/flow'
   let json
+  is_disabled.value = true;
+    for (let st of step_store.list_steps.steps) {
+      if(!esta_detenido) {
+        st.data.flow_id = flow_id
+        json = JSON.parse(JSON.stringify(st.data))
+        await axios.post(path, json).then((response) => {
+          flow_id = response.data.flow_id
+          st.status = "OK"
+          st.data.flow_id = flow_id
+          if (response.data.variable_data !== null)
+            var type = "";
+          if (st.id === 12)
+            type = "img"
+          else
+            type = "text"
+          update_var(st.data.arguments.var_name, response.data.variable_data, st.orden, type)
 
-  for (let st of step_store.list_steps.steps) {
-    st.data.flow_id = flow_id
-    json = JSON.parse(JSON.stringify(st.data))
-    await axios.post(path, json).then((response) => {
-      flow_id = response.data.flow_id
-      st.status = "OK"
-      st.data.flow_id = flow_id
-      if (response.data.variable_data !== null)
-        var type = "";
-      if (st.id === 12)
-        type = "img"
-      else
-        type = "text"
-      update_var(st.data.arguments.var_name, response.data.variable_data, st.orden, type)
-
-    }).catch((error) => {
-      console.log(error)
-      st.status = "ERROR"
-    })
-  }
+        }).catch((error) => {
+          console.log(error)
+          st.status = "ERROR"
+        })
+      }
+    }
+  is_disabled.value = false;
 }
 
 const detener_flujo = () => {
+  is_disabled.value = false;
+  esta_detenido=true;
   const path = '/api/flow'
   const json = {
     "command": "close_browser",
+    "arguments": {},
     "flow_id": flow_id,
-    "arguments": {}
+    "variable_data":""
+
   };
 
   axios.post(path, json).then((response) => {
@@ -427,11 +436,18 @@ const guardar_flujo = () => {
   const path = '/api/flow/update/'+ flux_id.value;
   const date_aux = new Date();
   const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
+  const steps_json = JSON.parse(sessionStorage.getItem("steps"))
+
+  //TODO: LLEVAR A UN METODO
+  for(let st of steps_json.list_steps.steps) {
+    st.status = ""
+  }
+
   const json = {
     "flux_name": flux_name.value,
     "date":date,
     "state":"-",
-    "flux": sessionStorage.getItem("steps"),
+    "flux": JSON.stringify(steps_json),
     "user": user_login.value,
     "project_id": project_id.value
   };

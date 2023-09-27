@@ -10,7 +10,7 @@ class CloseBrowser(Step):
         self._driver = self.get_driver_execution(flow_id)
 
     def execute(self):
-        self._driver.close()
+        #self._driver.close()
         self._driver.quit()
         plani.pop(self.flow_id)
         return 0, None

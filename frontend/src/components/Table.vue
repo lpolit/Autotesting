@@ -40,7 +40,6 @@
 import router from "@/router";
 import axios from "axios";
 import {useStepStore} from "@/stores/steps";
-import {ref} from "vue/dist/vue";
 
 const props = defineProps({
   items: Array,
