@@ -35,7 +35,7 @@
           <MDBModalTitle> Nombre del Flujo</MDBModalTitle>
         </MDBModalHeader>
         <MDBModalBody>
-          <input placeholder="Ingrese el nombre del Flujo" :autofocus="true" v-model="flux_name"/>
+          <input style="width: 100%" placeholder="Ingrese el nombre del Flujo" :autofocus="true" v-model="flux_name"/>
         </MDBModalBody>
         <MDBModalFooter>
           <button @click="set_modal(false)" class="btn btn-danger">Cancel</button>
@@ -79,7 +79,7 @@ import {
   MDBModalFooter
 } from "mdb-vue-ui-kit";
 import {useStepStore} from "@/stores/steps";
-
+import { notify } from "@kyvg/vue3-notification";
 const modal = ref();
 const modal_delete = ref();
 const flux_store = useFluxStore();
@@ -91,6 +91,13 @@ const flux_id = ref(0);
 const list_fluxs = ref ([])
 const user_login = ref(sessionStorage.getItem("user"));
 
+const notificar = (type: string, title: string, text: string) =>{
+  notify({
+    type: type,
+    title: title,
+    text: text,
+  });
+}
 
 const new_flux = () => {
   flux_name.value = "";
@@ -106,10 +113,11 @@ const save_flux = ()=> {
     path = '/api/flow/update/'+flux_id.value+'/'+ flux_name.value;
     axios.post(path).then((response) => {
       console.log(response.data)
-      alert("Se Modifico Correctamente")
+      notificar("success", "Operacion exitosa", "La Modificacion sobre el flujo "+response.data+" se realizo con exito")
       load_table()
     }).catch((error) => {
       console.log(error)
+      notificar("error", "Fallo", "Fallo al modificar el Flujo!")
     })
   }else{
     const date_aux = new Date();
@@ -128,10 +136,11 @@ const save_flux = ()=> {
 
     axios.post(path, json).then((response) => {
       console.log(response.data)
-      alert("Creacion Exitosa")
+      notificar("success", "Operacion exitosa", "La Creacion del flujo "+response.data+" se realizo con exito")
       load_table()
     }).catch((error) => {
       console.log(error)
+      notificar("error", "Fallo", "Fallo la creacion del flujo!")
     })
   }
 }
@@ -208,8 +217,10 @@ const delete_flux_db = () => {
   axios.delete(path).then((response) => {
     console.log(response.data)
     load_table()
+    notificar("success", "Operacion exitosa", "La eliminacion del Flujo "+response.data+" se realizo con exito")
   }).catch((error) => {
     console.log(error)
+    notificar("error", "Fallo", "Fallo al eliminar el flujo!")
   })
 
   set_modal_delete(false);

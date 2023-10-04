@@ -5,6 +5,7 @@ import App from "./App.vue";
 import Header from "@/pages/Header.vue";
 import Footer from "@/pages/Footer.vue";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import Notifications from '@kyvg/vue3-notification'
 
 
 
@@ -23,5 +24,6 @@ app.component('Header', Header)
 app.component('Footer', Footer)
 app.use(pinia);
 app.use(router);
+app.use(Notifications);
 app.mount("#app");
 

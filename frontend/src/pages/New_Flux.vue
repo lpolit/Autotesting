@@ -44,11 +44,7 @@
 
     <a title="Guardar flujo">
       <button id="btn_guardar" class="btn btn-primary"  @click="guardar_flujo" :disabled="is_disabled">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-             class="bi bi-save-fill" viewBox="0 0 16 16">
-          <path
-              d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v7.793L4.854 6.646a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l3.5-3.5a.5.5 0 0 0-.708-.708L8.5 9.293V1.5z"/>
-        </svg>
+        <img src="../icons/save.svg" style="width: 20px; filter: invert(1);"/>
       </button>
     </a>
   </div>
@@ -215,7 +211,7 @@ import axios from "axios";
 import {useStepStore} from "@/stores/steps";
 import Icon from "@/components/Icon.vue";
 import router from "@/router";
-
+import { notify } from "@kyvg/vue3-notification";
 
 const step_store = useStepStore();
 const project_name = ref(step_store.project_name.split("-")[0]);
@@ -261,6 +257,14 @@ const list_components = [
 ];
 
 const user_login = ref(sessionStorage.getItem("user"));
+
+const notificar = (type: string, title: string, text: string) =>{
+  notify({
+    type: type,
+    title: title,
+    text: text,
+  });
+}
 
 onMounted (() => {
   try {
@@ -386,6 +390,7 @@ const ejecutar_flujo = async () => {
   const path = '/api/flow'
   let json
   is_disabled.value = true;
+  notificar("info", "Ejecucion iniciada", "Se inicio la ejecucion del flujo "+flux_name.value)
     for (let st of step_store.list_steps.steps) {
       if(!esta_detenido) {
         st.data.flow_id = flow_id
@@ -409,6 +414,7 @@ const ejecutar_flujo = async () => {
       }
     }
   is_disabled.value = false;
+  notificar("info", "Ejecucion Finalizada", "Finalizo la ejecucion del flujo")
 }
 
 const detener_flujo = () => {
@@ -426,8 +432,10 @@ const detener_flujo = () => {
   axios.post(path, json).then((response) => {
     console.log(response.data)
     flow_id = 0
+    notificar("success", "Operacion exitosa", "Se detuvo la ejecucion con exito")
   }).catch((error) => {
     console.log(error)
+    notificar("error", "Fallo", "Fallo al detener la ejecucion!")
   })
 }
 
@@ -453,9 +461,10 @@ const guardar_flujo = () => {
   };
 
   axios.post(path, json).then((response) => {
-    alert("Guardado Exitoso")
+    notificar("success", "Guardado exitoso", "El guardado del flujo se realizo con exito")
   }).catch((error) => {
     console.log(error)
+    notificar("error", "Fallo", "Fallo al guardar el flujo!")
   })
 }
 
@@ -471,6 +480,7 @@ const delete_card = (index: number) => {
     step_store.list_vars.splice(index, 1);
 
   clear_step();
+  notificar("info", "Elimacion del paso", "Se elimino con exito el paso")
 }
 
 const pos = (evt: any) => {

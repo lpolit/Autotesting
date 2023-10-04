@@ -28,7 +28,7 @@
           <MDBModalTitle> Nombre del Projecto</MDBModalTitle>
         </MDBModalHeader>
         <MDBModalBody>
-          <input placeholder="Ingrese el nombre del Projecto" :autofocus="true" v-model="project_name"/>
+          <input style="width: 100%" placeholder="Ingrese el nombre del Projecto" :autofocus="true" v-model="project_name"/>
         </MDBModalBody>
         <MDBModalFooter>
           <button @click="set_modal(false)" class="btn btn-danger">Cancel</button>
@@ -70,6 +70,9 @@ import {
   MDBModalBody,
   MDBModalFooter
 } from "mdb-vue-ui-kit";
+import { notify } from "@kyvg/vue3-notification";
+
+
 const modal = ref();
 const modal_delete = ref();
 const project_name = ref("");
@@ -77,6 +80,15 @@ const project_id = ref (0);
 const project_store = useProjectStore();
 const list_projects = ref([])
 const modal_value = ref(false)
+
+const notificar = (type: string, title: string, text: string) =>{
+  notify({
+    type: type,
+    title: title,
+    text: text,
+  });
+}
+
 
 
 const new_project = () => {
@@ -89,9 +101,7 @@ const save_project = () => {
   const date_aux = new Date();
   const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
   const state = "-";
-  const author = user_login;
 
-  set_modal(false);
   set_modal(false);
   let path = '/api/project/insert';
 
@@ -108,10 +118,11 @@ const save_project = () => {
     axios.post(path, json).then((response) => {
       console.log(response.data)
       load_table()
+      notificar("success", "Operacion exitosa", "La operacion sobre el proyecto "+response.data+" se realizo con exito")
     }).catch((error) => {
       console.log(error)
+      notificar("error", "Fallo", "Fallo al insertar o modificar el Proyecto!")
     })
-
 
 }
 
@@ -188,8 +199,10 @@ const delete_project_db = () => {
   axios.delete(path).then((response) => {
     console.log(response.data)
     load_table()
+    notificar("success", "Operacion exitosa", "La eliminacion del proyecto "+response.data+" se realizo con exito")
   }).catch((error) => {
     console.log(error)
+    notificar("error", "Fallo", "Fallo al Eliminar el Proyecto!")
   })
   set_modal_delete(false)
 }
