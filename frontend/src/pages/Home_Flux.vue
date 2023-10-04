@@ -19,7 +19,7 @@
   <div class="page-container">
     <div class="page-content">
       <navbar class="flex-container" >
-        <button class="btn btn-primary" style="margin:11px 130px 33px 3px" @click="new_flux">Nuevo Flujo
+        <button class="btn btn-primary" style="margin:11px 130px 33px 3px" @click="new_flux"><img src="../icons/plus-circle.svg" style="width: 20px; margin-right: 10px; filter: invert(1);"/>Nuevo Flujo
         </button>
       </navbar>
       <div>

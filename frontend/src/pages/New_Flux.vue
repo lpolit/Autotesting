@@ -121,7 +121,7 @@
                   </MDBCardText>
 
                   <a title="Eliminar paso">
-                    <button name="btn_eliminar_step" class="btn btn-primary btn-align bin" @click="delete_card(index)" :disabled="is_disabled">
+                    <button name="btn_eliminar_step" class="btn btn-primary btn-align bin" @click="set_modal_delete(true)" :disabled="is_disabled">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                            fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                         <path
@@ -131,7 +131,22 @@
                   </a>
                 </MDBCardBody>
               </MDBCard>
-
+              <MDBModal
+                  id="modal_delete"
+                  tabindex="-1"
+                  v-model="modal_delete"
+              >
+                <MDBModalHeader>
+                  <MDBModalTitle> Eliminar Paso </MDBModalTitle>
+                </MDBModalHeader>
+                <MDBModalBody>
+                  <label>¿Esta seguro que desea eliminar el paso?</label>
+                </MDBModalBody>
+                <MDBModalFooter>
+                  <button @click="set_modal_delete(false)" class="btn btn-danger">Cancel</button>
+                  <button @click="delete_card(index)" class="btn btn-primary">Aceptar</button>
+                </MDBModalFooter>
+              </MDBModal>
             </div>
           </transition-group>
         </VueDraggableNext>
@@ -230,6 +245,10 @@ let card_pos = 0;
 let show_sidebar = ref(false);
 let type_sidebar = ref();
 
+const modal_delete = ref();
+const set_modal_delete = (valor: boolean) =>{
+  modal_delete.value = valor;
+}
 
 const list_components = [
   {"id": 1, "value": OpenBrowser},
@@ -384,9 +403,16 @@ const update_var = (var_key, new_value, index, type) => {
     item.type = type;
   }
 }
+const reset_flux_result=()=>{
+  for(let st of step_store.list_steps.steps) {
+    st.status = ""
+  }
+  return JSON.stringify(step_store)
+}
 
 const ejecutar_flujo = async () => {
   console.log(step_store.list_steps)
+  reset_flux_result()
   const path = '/api/flow'
   let json
   is_disabled.value = true;
@@ -515,6 +541,7 @@ const clean = (evt: any) => {
 const clear_step = () => {
   step.value = "";
   modal.value=false;
+  set_modal_delete(false);
 }
 
 const toogle_sidebar = (type: string) => {

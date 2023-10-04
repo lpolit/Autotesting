@@ -12,7 +12,7 @@
   <div class="page-container">
     <div class="page-content">
       <navbar class="flex-container" >
-        <button class="btn btn-primary" style="margin:11px 130px 33px 3px" @click="new_project">Nuevo Proyecto
+        <button class="btn btn-primary" style="margin:11px 130px 33px 3px" @click="new_project"><img src="../icons/plus-circle.svg" style="width: 20px; margin-right: 10px; filter: invert(1);"/>Nuevo Proyecto
         </button>
       </navbar>
       <div>
@@ -137,7 +137,6 @@ const load_table = () =>{
         "id": proj[0],
         "name": proj[1],
         "date": proj[2],
-        "state": proj[3],
         "author": proj[4],
       });
     }
@@ -170,7 +169,6 @@ const filtrarElementos = computed(() => {
         item.id?.toString().includes(filtro) ||
         item.name?.toLowerCase().includes(filtro) ||
         item.date?.toLowerCase().includes(filtro) ||
-        item.state?.toLowerCase().includes(filtro) ||
         item.author?.toLowerCase().includes(filtro)
     );
   });

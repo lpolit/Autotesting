@@ -6,7 +6,7 @@
       <th>Nombre</th>
       <th>Acciones</th>
       <th>Modificado</th>
-      <th>Estado</th>
+      <th v-if="props.store.$id == 'flux'">Estado</th>
       <th>Autor</th>
 
     </tr>
@@ -26,7 +26,7 @@
 
       </td>
       <td>{{ item.date }}</td>
-      <td>{{ item.state }}</td>
+      <td v-if="props.store.$id == 'flux'">{{ item.state }}</td>
       <td>{{ item.author }}</td>
 
 
