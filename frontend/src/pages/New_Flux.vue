@@ -6,7 +6,15 @@
 
     <div  class="navbar-collapse collapse navbar-align " >
       {{user_login}}
-      <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img width="35" style="margin:0 15px 0 10px" src="../icons/avatar.png" alt="Autotesting">
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="left: -80px">
+          <li><a class="dropdown-item" @click="log_out">Cambiar Contraseña</a></li>
+          <li><a class="dropdown-item" @click="log_out">Salir</a></li>
+        </ul>
+      </div>
     </div>
    </header>
 
@@ -100,7 +108,7 @@
           <transition-group>
             <div class="card-image" v-for="(st, index) in step_store.list_steps.steps" :key="st.id">
               <div class="icon-position mx-6">
-                Paso{{st.orden}}
+                Paso{{index + 1}}
                 <Icon v-if="st.status === 'OK'" icon="check_circle"/>
                 <Icon v-if="st.status === 'ERROR'" icon="error"/>
                 <Icon v-if="st.status === 'WARNING'" icon="warning"/>
@@ -235,7 +243,7 @@ const flux_name = ref(step_store.flux_name.split("-")[0]);
 const flux_id = ref(step_store.flux_name.split("-")[1]);
 const is_disabled = ref (false);
 const modal = ref(false);
-const excluded_steps = [7, 21];
+const excluded_steps = [21];
 let esta_detenido = false;
 let step = ref("");
 let orden_step = ref(0);
@@ -415,10 +423,12 @@ const ejecutar_flujo = async () => {
   reset_flux_result()
   const path = '/api/flow'
   let json
+  let indice = 0
   is_disabled.value = true;
   notificar("info", "Ejecucion iniciada", "Se inicio la ejecucion del flujo "+flux_name.value)
     for (let st of step_store.list_steps.steps) {
       if(!esta_detenido) {
+        indice++
         st.data.flow_id = flow_id
         json = JSON.parse(JSON.stringify(st.data))
         await axios.post(path, json).then((response) => {

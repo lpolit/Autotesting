@@ -6,9 +6,19 @@
 
     <div  class="navbar-collapse collapse navbar-align " >
       {{user_login}}
-      <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
+      <div class="dropdown">
+        <img width="35" style="margin:0 15px 0 10px" src="../icons/avatar.png" alt="Autotesting">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="left: -100px">
+          <li><a class="dropdown-item" @click="change_passw">Cambiar Contraseña</a></li>
+          <li><a class="dropdown-item" @click="log_out">Salir</a></li>
+        </ul>
+      </div>
     </div>
   </header>
+
   <div class="page-container">
     <div class="page-content">
       <navbar class="flex-container" >
@@ -71,6 +81,7 @@ import {
   MDBModalFooter
 } from "mdb-vue-ui-kit";
 import { notify } from "@kyvg/vue3-notification";
+import {useStepStore} from "@/stores/steps";
 
 
 const modal = ref();
@@ -78,6 +89,7 @@ const modal_delete = ref();
 const project_name = ref("");
 const project_id = ref (0);
 const project_store = useProjectStore();
+const step_store = useStepStore();
 const list_projects = ref([])
 const modal_value = ref(false)
 
@@ -205,6 +217,14 @@ const delete_project_db = () => {
   set_modal_delete(false)
 }
 
+const log_out = () => {
+  step_store.$reset()
+  router.push("/")
+}
+
+const change_passw = () =>{
+  router.push("change")
+}
 
 </script>
 <style>

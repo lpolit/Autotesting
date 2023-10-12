@@ -6,7 +6,15 @@
 
     <div  class="navbar-collapse collapse navbar-align " >
       {{user_login}}
-      <img width="35"  style="margin:0 15px 0 10px" src="avatar.png" alt="Autotesting">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img width="35" style="margin:0 15px 0 10px" src="../icons/avatar.png" alt="Autotesting">
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="left: -80px">
+          <li><a class="dropdown-item" @click="log_out">Cambiar Contraseña</a></li>
+          <li><a class="dropdown-item" @click="log_out">Salir</a></li>
+        </ul>
+      </div>
     </div>
   </header>
 
@@ -225,6 +233,11 @@ const delete_flux_db = () => {
 
   set_modal_delete(false);
 
+}
+
+const log_out = () => {
+  step_store.$reset()
+  router.push("/")
 }
 
 

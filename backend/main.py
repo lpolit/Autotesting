@@ -49,6 +49,12 @@ class UserSchema(BaseModel):
            }
         }
 
+
+class UserChangeSchema(BaseModel):
+    email : str = Field(default=None)
+    password : str = Field(default=None)
+    password_act : str = Field(default=None)
+
 class UserLoginSchema(BaseModel):
     email: EmailStr = Field(default=None)
     password: str = Field(default=None)
@@ -249,16 +255,16 @@ def user_signup(user: UserSchema = Body(default=None)):
     userDb.insert_user(user)
     return signJWT(user.email)
 
-def check_user(data: UserLoginSchema):
+def check_user(email, password):
     users = userDb.get_all_users()
     for user in users:
-        if user[1]==data.email and user[2] == data.password:
+        if user[1]==email and user[2] == password:
             return True
     return False
 
 @app.post("/user/login")
 def user_login(user: UserLoginSchema = Body(default=None)):
-    if check_user(user):
+    if check_user(user.email, user.password):
         return signJWT(user.email)
     else:
         raise HTTPException(
@@ -266,6 +272,32 @@ def user_login(user: UserLoginSchema = Body(default=None)):
             detail=f"Error: Invalid login details!",
         )
 
+@app.post("/user/reset/{user}")
+def user_login(user: str):
+    try:
+       us = userDb.change_password_user(user)
+       return us
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: Invalid login details!",
+        )
+
+@app.post("/user/change")
+def user_login(user: UserChangeSchema):
+    detail_error="Error: Invalid login details!"
+    try:
+        if check_user(user.email, user.password_act):
+            us = userDb.change_password_user(user.email, user.password)
+            return us
+        else:
+            detail_error = f"La contraseña actual no es la correcta!"
+            raise HTTPException()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=detail_error,
+        )
 @app.post("/user/getAll")
 def get_all_users():
     try:

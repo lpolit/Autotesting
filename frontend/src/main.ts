@@ -8,10 +8,6 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import Notifications from '@kyvg/vue3-notification'
 
 
-
-// import { EdaVue } from "@eda/vue";
-// import "@eda/style/dist/css/all.css";
-// import "@eda/vue/dist/eda-vue.css";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/css/bootstrap.css'

@@ -6,10 +6,10 @@
              </div>
              <div id="form">
                <form @submit.prevent="doRegister">
-                 <label for="name">Nombre</label>
+                 <label for="name" style="margin-bottom: 20px">Nombre</label>
                  <input type="text" id="name" v-model="name" placeholder="Ingrese un nombre" autocomplete="off">
 
-                 <label for="email">Email</label>
+                 <label for="email" style="margin-bottom: 20px">Email</label>
                  <input type="text" id="email" v-model="email" placeholder="mail@example.com" autocomplete="off">
 
                  <label for="password">Contraseña</label>&nbsp;
@@ -20,7 +20,7 @@
                  <i class="fas" :class="[passwordFieldIcon]" @click="hidePassword = !hidePassword"></i>
                  <input :type="passwordFieldType" id="confirm_password" v-model="confirm_password" placeholder="**********">
 
-                 <input style="color: red; font-size: 10px;" id ="mensajeError" v-model="mensajeError"/>
+                 <input style="color: red; font-size: 10px; border: none" id ="mensajeError" v-model="mensajeError"/>
                  <button class="btn" type="submit">Registrarse</button>
                </form>
                <a href="#" class="btn btn-link" style="font-size: 12px; margin-top: 15px;">
@@ -122,7 +122,7 @@
          border-radius: 5px;
          box-shadow: 0px 0px 30px 0px #666;
          color: #ecf0f1;
-         width: 260px;
+         width: 300px;
          padding: 35px;
        }
 
@@ -139,7 +139,6 @@
 
        div#app div#register div#form input {
          background-color: transparent;
-         border: none;
          color: #ecf0f1;
          font-size: 1em;
          margin-bottom: 20px;

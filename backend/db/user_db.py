@@ -42,3 +42,14 @@ def delete_all_users():
     con.commit()
     con.close()
 
+def change_password_user(user, password='123456'):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    try:
+        cur.execute(f"UPDATE usuarios SET password='{password}' WHERE email='{user}'")
+    except:
+        print("FALLO EL CAMBIO DE LA CONTRASEÑA")
+    finally:
+        con.commit()
+        con.close()
+    return user;

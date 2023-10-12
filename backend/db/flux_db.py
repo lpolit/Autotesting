@@ -27,9 +27,11 @@ def insert_flux(FluxSchema):
 def update_name_flux(flux_name, flow_id):
     import json
     flux = get_flux(flow_id)
-    flux_json = json.loads(flux[5])
-    flux_json["flux_name"] = flux_name + "-" + flux_json["flux_name"].split("-")[1]
-    flux = json.dumps(flux_json)
+    flux = flux[5]
+    if flux != ' ':
+        flux_json = json.loads(flux)
+        flux_json["flux_name"] = flux_name + "-" + flux_json["flux_name"].split("-")[1]
+        flux = json.dumps(flux_json)
 
     con = sqlite3.connect(_DB)
     cur = con.cursor()
