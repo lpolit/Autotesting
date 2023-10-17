@@ -91,7 +91,23 @@ const project_id = ref (0);
 const project_store = useProjectStore();
 const step_store = useStepStore();
 const list_projects = ref([])
-const modal_value = ref(false)
+const user_login = ref(String);
+
+onMounted (() => {
+  try {
+    let user = sessionStorage.getItem("user")
+    if (user == "" || user == null){
+      router.push("/")
+    }
+    user_login.value=user
+
+  } catch (error) {
+    router.push("/")
+    console.log(error, 'error from decoding token')
+  }
+  load_table();
+
+})
 
 const notificar = (type: string, title: string, text: string) =>{
   notify({
@@ -101,15 +117,13 @@ const notificar = (type: string, title: string, text: string) =>{
   });
 }
 
-
-
 const new_project = () => {
   project_name.value = "";
+  project_id.value=0
   set_modal(true);
 }
 
 const save_project = () => {
-
   const date_aux = new Date();
   const date = date_aux.toLocaleDateString() + " " + date_aux.toLocaleTimeString();
   const state = "-";
@@ -138,8 +152,6 @@ const save_project = () => {
 
 }
 
-const user_login = ref(String);
-
 const load_table = () =>{
   list_projects.value = []
   axios.post('/api/project/getAll/'+ user_login.value).then((response) => {
@@ -156,21 +168,7 @@ const load_table = () =>{
     console.log(error)
   })
 }
-onMounted (() => {
-  try {
-    let user = sessionStorage.getItem("user")
-    if (user == "" || user == null){
-      router.push("/")
-    }
-    user_login.value=user
 
-  } catch (error) {
-    router.push("/")
-    console.log(error, 'error from decoding token')
-  }
-  load_table();
-
-})
 
 const filtroTabla = ref("");
 

@@ -5,8 +5,8 @@
       <th>ID</th>
       <th>Nombre</th>
       <th></th>
-      <th v-if="props.store.$id == 'flux'">Fh. Ult Ejecucion</th>
       <th v-if="props.store.$id == 'project'">Fh. Ult Modificacion</th>
+      <th v-if="props.store.$id == 'flux'">Fh. Ult Ejecucion</th>
       <th v-if="props.store.$id == 'flux'" style="text-align: center">Estado</th>
       <th v-if="props.store.$id == 'flux'"  style="text-align: center">Ult. Ejecucion</th>
       <th>Autor</th>
@@ -59,11 +59,6 @@
     <MDBModalBody>
       <ul class="list-group">
         <li  v-for="item in result_view.list_steps.steps" :key="item.id" :class="[item.status == 'OK' ? 'list-group-item list-group-item-success' : 'list-group-item list-group-item-danger']"  v-html=" '<h5>'+item.name +' </h5>'+item.description"></li>
-
-
-
-
-
       </ul>
     </MDBModalBody>
     <MDBModalFooter>
@@ -82,8 +77,8 @@ import axios from "axios";
 import {useStepStore} from "@/stores/steps";
 import {notify} from "@kyvg/vue3-notification";
 
-import {nextTick, onMounted,ref} from "vue";
-import {MDBCardText, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader, MDBModalTitle} from "mdb-vue-ui-kit";
+import {ref} from "vue";
+import {MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader, MDBModalTitle} from "mdb-vue-ui-kit";
 
 
 const props = defineProps({
@@ -91,11 +86,14 @@ const props = defineProps({
   store: Object,
   project_name: String
 })
-let step_store = useStepStore();
-const emit = defineEmits(['onEdit', 'onDelete'])
 
+let step_store = useStepStore();
 let esta_detenido = false;
 let flow_id = 0;
+
+const emit = defineEmits(['onEdit', 'onDelete'])
+
+
 const estado_resultado = ref('')
 const result_modal = ref();
 const result_view = ref();
@@ -137,6 +135,7 @@ const notificar = (type: string, title: string, text: string) =>{
     text: text,
   });
 }
+
 const abrir_flujo= async (id:number)=>{
   const path = '/api/flow/abrir/'+id
   await axios.post(path).then((response) => {
@@ -220,7 +219,6 @@ const update_var = (var_key: any, new_value: any, index: any, type: string) => {
 }
 
 const stop =( id:number)=>{
-
   esta_detenido = true;
 }
 

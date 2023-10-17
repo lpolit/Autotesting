@@ -3,38 +3,30 @@ import sqlite3
 from common.file_utils import FileUtils
 
 _DB = FileUtils.config_location()+"/autotesting.db"
-def create_table_project():
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    # Create table
-    cur.execute('''CREATE TABLE projects
-                   (id INT,"project_name", "date", "state", "user")''')
-    con.commit()
-    con.close()
 
-def insert_project(ProjectSchema):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    proximo_id = get_id_max()+1
+def execute(query: str):
     try:
-        cur.execute(f"INSERT INTO projects VALUES ({proximo_id},'{ProjectSchema.project_name}','{ProjectSchema.date}','{ProjectSchema.state}','{ProjectSchema.user}')")
-    except:
-        print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL PROYECTO")
+        con = sqlite3.connect(_DB)
+        cur = con.cursor()
+        cur.execute(query)
+    except Exception as e:
+        print("Fallo la ejecucion con el error: "+e)
     finally:
         con.commit()
         con.close()
+
+
+def create_table_project():
+    execute('''CREATE TABLE projects
+                   (id INT,"project_name", "date", "state", "user")''')
+
+def insert_project(ProjectSchema):
+    proximo_id = get_id_max()+1
+    execute(f"INSERT INTO projects VALUES ({proximo_id},'{ProjectSchema.project_name}','{ProjectSchema.date}','{ProjectSchema.state}','{ProjectSchema.user}')")
     return proximo_id;
 
 def update_project(ProjectSchema, project_id):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    try:
-        cur.execute(f"UPDATE projects SET project_name='{ProjectSchema.project_name}', date='{ProjectSchema.date}' WHERE id={project_id}")
-    except:
-        print("FALLO AL UPDATEAR EL PROYECTO")
-    finally:
-        con.commit()
-        con.close()
+    execute(f"UPDATE projects SET project_name='{ProjectSchema.project_name}', date='{ProjectSchema.date}' WHERE id={project_id}")
     return project_id;
 
 def get_project(ProjectSchema):
@@ -44,8 +36,6 @@ def get_project(ProjectSchema):
     project =cur.fetchone()
     con.close()
     return project
-
-
 
 def get_all_projects():
     con = sqlite3.connect(_DB)
@@ -64,20 +54,12 @@ def get_all_projects_for_user(username):
     return projects
 
 def delete_project(id_project: int):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    cur.execute(f"DELETE FROM projects WHERE id = {id_project}")
-    con.commit()
-    con.close()
+    execute(f"DELETE FROM projects WHERE id = {id_project}")
     return id_project
 
 
 def delete_all_projects():
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    cur.execute(f"DELETE FROM projects")
-    con.commit()
-    con.close()
+    execute(f"DELETE FROM projects")
 
 def get_id_max():
     con = sqlite3.connect(_DB)
@@ -89,12 +71,4 @@ def get_id_max():
 
 
 def insert_inicial():
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    try:
-        cur.execute(f"INSERT INTO projects VALUES (1,'Proyecto1','-','-','prueba@example.com')")
-    except:
-        print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL PROYECTO")
-    finally:
-        con.commit()
-        con.close()
+    execute(f"INSERT INTO projects VALUES (1,'Proyecto1','-','-','prueba@example.com')")

@@ -5,25 +5,28 @@ import time
 from common.file_utils import FileUtils
 
 _DB = FileUtils.config_location()+"/autotesting.db"
+
+
+def execute(query: str):
+    try:
+        con = sqlite3.connect(_DB)
+        cur = con.cursor()
+        cur.execute(query)
+    except Exception as e:
+        print("Fallo la ejecucion con el error: "+e)
+    finally:
+        con.commit()
+        con.close()
+
 def create_table_flux():
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    # Create table
-    cur.execute('''CREATE TABLE fluxs
+    execute('''CREATE TABLE fluxs
                    (id INT,"flux_name", "date", "state", "user", "flux", id_project INT)''')
-    con.commit()
-    con.close()
 
 
 def insert_flux(FluxSchema):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    proximo_id = get_id_max()+1
-    cur.execute(
-        f"INSERT INTO fluxs VALUES ({proximo_id},'{FluxSchema.flux_name}','{FluxSchema.date}', '{FluxSchema.state}', '{FluxSchema.user}', '{FluxSchema.flux}',{int(FluxSchema.project_id)})")
-    con.commit()
-    con.close()
-    return proximo_id
+   proximo_id = get_id_max()+1
+   execute(f"INSERT INTO fluxs VALUES ({proximo_id},'{FluxSchema.flux_name}','{FluxSchema.date}', '{FluxSchema.state}', '{FluxSchema.user}', '{FluxSchema.flux}',{int(FluxSchema.project_id)})")
+   return proximo_id
 
 def update_name_flux(flux_name, flow_id):
     import json
@@ -34,41 +37,15 @@ def update_name_flux(flux_name, flow_id):
         flux_json["flux_name"] = flux_name + "-" + flux_json["flux_name"].split("-")[1]
         flux = json.dumps(flux_json)
 
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    try:
-        cur.execute(
-                f"UPDATE fluxs SET flux_name='{flux_name}', flux= '{flux}' WHERE id = {int(flow_id)}")
-    except  Exception as e:
-        print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL FLUJO")
-    finally:
-        con.commit()
-        con.close()
+    execute(f"UPDATE fluxs SET flux_name='{flux_name}', flux= '{flux}' WHERE id = {int(flow_id)}")
+
 
 def update_flux(FluxSchema, flow_id):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    try:
-        cur.execute(
-                f"UPDATE fluxs SET flux='{FluxSchema.flux}' WHERE id = {int(flow_id)}")
-    except:
-        print("FALLO AL INTENTAR INSERTAR O UPDATEAR EL FLUJO")
-    finally:
-        con.commit()
-        con.close()
+    execute(f"UPDATE fluxs SET flux='{FluxSchema.flux}' WHERE id = {int(flow_id)}")
 
 def update_date(flow_id):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
     date = time.strftime("%x") + " " + time.strftime("%X")
-    try:
-        cur.execute(
-                f"UPDATE fluxs SET date='{date}' WHERE id = {int(flow_id)}")
-    except:
-        print("FALLO AL INTENTAR UPDATEAR EL FLUJO")
-    finally:
-        con.commit()
-        con.close()
+    execute(f"UPDATE fluxs SET date='{date}' WHERE id = {int(flow_id)}")
     return date
 
 
@@ -98,19 +75,11 @@ def get_fluxs_from_project(project_id):
     return fluxs
 
 def delete_flux(flux_id: int):
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    cur.execute(f"DELETE FROM fluxs WHERE id = {flux_id}")
-    con.commit()
-    con.close()
+    execute(f"DELETE FROM fluxs WHERE id = {flux_id}")
     return flux_id
 
 def delete_all_flujos():
-    con = sqlite3.connect(_DB)
-    cur = con.cursor()
-    cur.execute(f"DELETE FROM fluxs")
-    con.commit()
-    con.close()
+    execute(f"DELETE FROM fluxs")
 
 def get_id_max():
     con = sqlite3.connect(_DB)

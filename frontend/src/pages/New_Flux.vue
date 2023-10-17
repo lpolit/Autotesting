@@ -244,6 +244,8 @@ const flux_id = ref(step_store.flux_name.split("-")[1]);
 const is_disabled = ref (false);
 const modal = ref(false);
 const excluded_steps = [21];
+const modal_delete = ref();
+const user_login = ref(sessionStorage.getItem("user"));
 let esta_detenido = false;
 let step = ref("");
 let orden_step = ref(0);
@@ -252,11 +254,6 @@ let flow_id = 0;
 let card_pos = 0;
 let show_sidebar = ref(false);
 let type_sidebar = ref();
-
-const modal_delete = ref();
-const set_modal_delete = (valor: boolean) =>{
-  modal_delete.value = valor;
-}
 
 const list_components = [
   {"id": 1, "value": OpenBrowser},
@@ -283,16 +280,6 @@ const list_components = [
   {"id": 22, "value": If}
 ];
 
-const user_login = ref(sessionStorage.getItem("user"));
-
-const notificar = (type: string, title: string, text: string) =>{
-  notify({
-    type: type,
-    title: title,
-    text: text,
-  });
-}
-
 onMounted (() => {
   try {
     if (user_login.value == "" || user_login.value == null){
@@ -312,6 +299,19 @@ onMounted (() => {
   }
 })
 
+
+const set_modal_delete = (valor: boolean) =>{
+  modal_delete.value = valor;
+}
+
+const notificar = (type: string, title: string, text: string) =>{
+  notify({
+    type: type,
+    title: title,
+    text: text,
+  });
+}
+
 const erase_epanel_text = computed(() => {
   return step_store.list_steps.steps.length === 0;
 });
@@ -320,7 +320,6 @@ let component_modal = computed(() => {
   return list_components.find(it =>
       it.id === step.value.id)?.value;
 });
-
 
 const start_drag = (evt: any, id: number) => {
   evt.dataTransfer.dropEffect = 'move';
@@ -354,7 +353,6 @@ const check_modal_visibility = () => {
 }
 
 const set_step_data = () => {
-
   set_arguments();
   set_card_description();
   add_var_to_list();
@@ -578,12 +576,6 @@ a{
 }
 body {
   height: 800px;
-}
-
-.flex-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
 }
 
 .btn {
