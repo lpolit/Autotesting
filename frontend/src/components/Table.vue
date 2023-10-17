@@ -5,7 +5,8 @@
       <th>ID</th>
       <th>Nombre</th>
       <th></th>
-      <th>Fh. Ult Ejecucion</th>
+      <th v-if="props.store.$id == 'flux'">Fh. Ult Ejecucion</th>
+      <th v-if="props.store.$id == 'project'">Fh. Ult Modificacion</th>
       <th v-if="props.store.$id == 'flux'" style="text-align: center">Estado</th>
       <th v-if="props.store.$id == 'flux'"  style="text-align: center">Ult. Ejecucion</th>
       <th>Autor</th>
