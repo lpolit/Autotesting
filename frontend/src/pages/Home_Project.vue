@@ -219,6 +219,7 @@ const delete_project_db = () => {
 
 const log_out = () => {
   step_store.$reset()
+  sessionStorage.clear()
   router.push("/")
 }
 

@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import time
 
 from common.file_utils import FileUtils
 
@@ -55,6 +56,20 @@ def update_flux(FluxSchema, flow_id):
     finally:
         con.commit()
         con.close()
+
+def update_date(flow_id):
+    con = sqlite3.connect(_DB)
+    cur = con.cursor()
+    date = time.strftime("%x") + " " + time.strftime("%X")
+    try:
+        cur.execute(
+                f"UPDATE fluxs SET date='{date}' WHERE id = {int(flow_id)}")
+    except:
+        print("FALLO AL INTENTAR UPDATEAR EL FLUJO")
+    finally:
+        con.commit()
+        con.close()
+    return date
 
 
 def get_flux(id_flux):

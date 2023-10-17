@@ -419,13 +419,21 @@ const reset_flux_result=()=>{
 }
 
 const ejecutar_flujo = async () => {
-  console.log(step_store.list_steps)
+  //UPDATEO LA FECHA DE EJECUCION
+  let path = '/api/flow/update_date/' + flux_id.value
+  await axios.post(path).then((response) => {
+    console.log(response.data)
+  }).catch((error) => {
+    console.log(error)
+  })
+  //INICO LA EJECUCION
   reset_flux_result()
-  const path = '/api/flow'
+  path = '/api/flow'
   let json
   let indice = 0
   is_disabled.value = true;
   notificar("info", "Ejecucion iniciada", "Se inicio la ejecucion del flujo "+flux_name.value)
+  sessionStorage.setItem("img_resultado_"+flux_id.value, "src/icons/ok.png")
     for (let st of step_store.list_steps.steps) {
       if(!esta_detenido) {
         indice++
@@ -446,11 +454,13 @@ const ejecutar_flujo = async () => {
         }).catch((error) => {
           console.log(error)
           st.status = "ERROR"
+          sessionStorage.setItem("img_resultado_"+flux_id.value, "src/icons/error.png")
         })
       }
     }
   is_disabled.value = false;
   notificar("info", "Ejecucion Finalizada", "Finalizo la ejecucion del flujo")
+  sessionStorage.setItem("result_"+flux_id.value, JSON.stringify(step_store))
 }
 
 const detener_flujo = () => {
@@ -506,6 +516,7 @@ const guardar_flujo = () => {
 
 const log_out = () => {
   step_store.$reset()
+  sessionStorage.clear()
   router.push("/")
 }
 

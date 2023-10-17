@@ -223,7 +223,16 @@ def flow_update(flow_id: str, flux_name: str):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Error: {e}",
         )
-
+@app.post("/flow/update_date/{flow_id}")
+def flow_update_date(flow_id: str):
+    try:
+        date = fluxDb.update_date(int(flow_id));
+        return date
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Error: {e}",
+        )
 @app.post("/flow/insert")
 def flow_insert(flux: FluxSchema):
     try:

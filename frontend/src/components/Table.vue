@@ -6,8 +6,8 @@
       <th>Nombre</th>
       <th></th>
       <th>Fh. Ult Ejecucion</th>
-      <th v-if="props.store.$id == 'flux'" style="text-align: center">Estado Ejecucion</th>
-      <th v-if="props.store.$id == 'flux'"  style="text-align: center">Resultado</th>
+      <th v-if="props.store.$id == 'flux'" style="text-align: center">Estado</th>
+      <th v-if="props.store.$id == 'flux'"  style="text-align: center">Ult. Ejecucion</th>
       <th>Autor</th>
       <th>Acciones</th>
 
@@ -15,7 +15,7 @@
     </thead>
     <tbody>
 
-    <tr v-for="item in items" :key="item.id">
+    <tr v-for="item in items" :key="item.id" >
 
       <td>{{ item.id }}</td>
       <td style="cursor:pointer; width: 20%" @click="go(item.name, item.id)">{{ item.name }} </td>
@@ -23,7 +23,7 @@
       </td>
       <td>{{ item.date }}</td>
       <td v-if="props.store.$id == 'flux'"  style="text-align: center;" ><img  :id="'img_estado_'+item.id" width="25" src="src/icons/senal-stop.png" ></td>
-      <td v-if="props.store.$id == 'flux'"  style="text-align: center; cursor: pointer" ><img  @click="go_result(item.id)" :id="'img_resultado_'+item.id" width="25" src="src/icons/linea.png" ></td>
+      <td v-if="props.store.$id == 'flux'"  style="text-align: center; cursor: pointer" ><img  @click="go_result(item.id)" :id="'img_resultado_'+item.id" width="25" :src="get_img_result(item.id)" ></td>
       <td>{{ item.author }}</td>
 
       <td>
@@ -74,13 +74,16 @@
 
 <script setup lang="ts">
 
+
+
 import router from "@/router";
 import axios from "axios";
 import {useStepStore} from "@/stores/steps";
 import {notify} from "@kyvg/vue3-notification";
 
-import {ref} from "vue";
+import {nextTick, onMounted,ref} from "vue";
 import {MDBCardText, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader, MDBModalTitle} from "mdb-vue-ui-kit";
+
 
 const props = defineProps({
   items: Array,
@@ -113,8 +116,10 @@ const go = (name:string, id:number)=> {
 
 const go_result = (id:number)=> {
   let store_resul = JSON.parse(sessionStorage.getItem("result_"+id))
-  result_view.value = store_resul
-  set_modal(true)
+  if (store_resul) {
+    result_view.value = store_resul
+    set_modal(true)
+  }
 
 }
 
@@ -144,6 +149,7 @@ const abrir_flujo= async (id:number)=>{
 
 const ejecutar_flujo = async ( id:number)=>{
   estado_resultado.value='';
+  //CARGO EL FLUJO EN ES STEP STORE
   let path = '/api/flow/abrir/'+id
   await axios.post(path).then((response) => {
     let json = JSON.parse(response.data)
@@ -151,9 +157,16 @@ const ejecutar_flujo = async ( id:number)=>{
   }).catch((error) => {
     console.log(error)
   })
+  //UPDATEO LA FECHA DE EJECUCION
+  path  = '/api/flow/update_date/'+id
+  await axios.post(path).then((response) => {
+    props.items[props.items.findIndex(x => x.id === id)].date = response.data
+  }).catch((error) => {
+    console.log(error)
+  })
+
+  //INICIO LA EJECUCION
   document.getElementById('img_estado_'+id.toString()).setAttribute("src","src/icons/loading.gif")
-    console.log(step_store.list_steps)
-    //reset_flux_result()
     path = '/api/flow'
     let json
     //is_disabled.value = true;
@@ -169,6 +182,7 @@ const ejecutar_flujo = async ( id:number)=>{
           if (estado_resultado.value!= "ERROR") {
             estado_resultado.value = "OK"
             document.getElementById('img_resultado_' + id.toString()).setAttribute("src", "src/icons/ok.png")
+            sessionStorage.setItem("img_resultado_"+id, "src/icons/ok.png")
           }
           if (response.data.variable_data !== null)
             var type = "";
@@ -183,11 +197,12 @@ const ejecutar_flujo = async ( id:number)=>{
           st.status = "ERROR"
           estado_resultado.value = "ERROR"
           document.getElementById('img_resultado_'+id.toString()).setAttribute("src","src/icons/error.png")
+          sessionStorage.setItem("img_resultado_"+id, "src/icons/error.png")
         })
       }
     }
     //is_disabled.value = false;
-    notificar("info", "Ejecucion Finalizada", "Finalizo la ejecucion del flujo")
+  notificar("info", "Ejecucion Finalizada", "Finalizo la ejecucion del flujo")
   document.getElementById('img_estado_'+id.toString()).setAttribute("src","src/icons/senal-stop.png")
   sessionStorage.setItem("result_"+id, JSON.stringify(step_store))
 
@@ -208,9 +223,6 @@ const stop =( id:number)=>{
   esta_detenido = true;
 }
 
-
-
-
 const new_flux = () => {
   router.push("new_flux")
 }
@@ -222,6 +234,17 @@ const editar = (id: any, name: any) => {
 const eliminar = (id: any) => {
   emit('onDelete', id)
 }
+
+const get_img_result = (id:any)=>{
+  let img = sessionStorage.getItem("img_resultado_"+id)
+  if (img) {
+    return img
+  }else{
+    return "src/icons/linea.png"
+  }
+}
+
+
 </script>
 
 <style>
