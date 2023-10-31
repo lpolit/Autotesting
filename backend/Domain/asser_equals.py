@@ -1,3 +1,5 @@
+import os
+
 from Domain.step import Step
 
 
@@ -14,7 +16,11 @@ class AsserEqual(AsserEquals):
     short_name= "assert_equal"
 
     def execute(self):
-        assert self.expected_value == self.actual_value
+        if self.actual_value[0]=="{" and self.actual_value[-1]=="}":
+            var_name = self.actual_value.replace("{","").replace("}","")
+            assert self.expected_value == os.environ.get(var_name)
+        else:
+            assert self.expected_value == self.actual_value
         return self.flow_id, None
 
 

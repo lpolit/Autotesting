@@ -139,8 +139,12 @@ const notificar = (type: string, title: string, text: string) =>{
 const abrir_flujo= async (id:number)=>{
   const path = '/api/flow/abrir/'+id
   await axios.post(path).then((response) => {
-    let json = JSON.parse(response.data)
-    step_store.list_steps.steps = json.list_steps.steps
+    if (response.data == " "){
+      step_store.list_steps.steps =[]
+    }else{
+      let json = JSON.parse(response.data)
+      step_store.list_steps.steps = json.list_steps.steps
+    }
   }).catch((error) => {
     console.log(error)
   })

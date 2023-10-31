@@ -4,13 +4,18 @@ from selenium.webdriver import ChromeOptions
 from selenium.webdriver import EdgeOptions
 from selenium.webdriver import FirefoxOptions
 
+from common.file_utils import FileUtils
+
+
 class Driver:
     def get_driver(self, browser, headless):
         try:
             driver_class, options_class = self.driver_broker(browser)
             options = self.browser_options(headless)[browser]
-            web_driver = driver_class(options=options)
-            return web_driver
+            service = webdriver.ChromeService(executable_path="chromedriver.exe")
+            driver = webdriver.Chrome(service=service, options=options)
+            # web_driver = driver_class(service=service)
+            return driver
         except WebDriverException as ex:
             raise WebDriverException("WDM no llega a Internet. HTTPS_PROXY este seteada correctamente?", ex)
 

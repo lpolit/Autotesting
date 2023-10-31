@@ -152,6 +152,7 @@
 
  div#app div#reset_password div#form button:hover {
    background-color: #eeeeee;
+   color: dimgray;
  }
 
  @media screen and (max-width: 600px) {

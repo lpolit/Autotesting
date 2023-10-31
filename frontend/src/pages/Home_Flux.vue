@@ -11,7 +11,7 @@
           <img width="35" style="margin:0 15px 0 10px" src="../icons/avatar.png" alt="Autotesting">
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="left: -80px">
-          <li><a class="dropdown-item" @click="log_out">Cambiar Contraseña</a></li>
+          <li><a class="dropdown-item" @click="change_passw">Cambiar Contraseña</a></li>
           <li><a class="dropdown-item" @click="log_out">Salir</a></li>
         </ul>
       </div>
@@ -239,6 +239,10 @@ const log_out = () => {
   step_store.$reset()
   sessionStorage.clear()
   router.push("/")
+}
+
+const change_passw = () =>{
+  router.push("change")
 }
 
 

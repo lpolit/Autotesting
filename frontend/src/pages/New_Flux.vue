@@ -108,7 +108,11 @@
           <transition-group>
             <div class="card-image" v-for="(st, index) in step_store.list_steps.steps" :key="st.id">
               <div class="icon-position mx-6">
-                Paso{{index + 1}}
+
+                <b style="width: 90px" v-if="st.id===13">Verificacion</b>
+                <b style="width: 90px" v-else-if="st.id===14">Verificacion</b>
+                <b style="width: 90px" v-else>Paso{{index + 1}}</b>
+
                 <Icon v-if="st.status === 'OK'" icon="check_circle"/>
                 <Icon v-if="st.status === 'ERROR'" icon="error"/>
                 <Icon v-if="st.status === 'WARNING'" icon="warning"/>
@@ -298,7 +302,6 @@ onMounted (() => {
     console.log(error, 'error from decoding token')
   }
 })
-
 
 const set_modal_delete = (valor: boolean) =>{
   modal_delete.value = valor;

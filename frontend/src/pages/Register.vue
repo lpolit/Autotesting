@@ -31,11 +31,12 @@
          </div>
        </template>
 
-       <script setup>
+       <script setup lang="ts">
 
        import router from "@/router";
        import {computed, onMounted, ref} from "vue";
        import axios from "axios";
+       import { notify } from "@kyvg/vue3-notification";
 
        const name = ref("");
        const email = ref("");
@@ -50,6 +51,13 @@
        onMounted (() => {
          localStorage.setItem("user", "")
        })
+       const notificar = (type: string, title: string, text: string) =>{
+         notify({
+           type: type,
+           title: title,
+           text: text,
+         });
+       }
 
        const doRegister = async () => {
 
@@ -61,13 +69,15 @@
 
          const path = '/api/user/signup'
          await axios.post(path, json).then((response) => {
-           alert("Creacion Exitosa")
+           notificar("success", "Operacion exitosa", "El registro del usuario "+ name.value +" se realizo exitosamente")
            router.push("/")
          }).catch((error) => {
            mensajeError.value = "Usuario o clave Invalida"
            console.log(error)
          })
        }
+
+
 
        </script>
 
@@ -160,6 +170,7 @@
 
        div#app div#register div#form button:hover {
          background-color: #eeeeee;
+         color: dimgray;
        }
 
        @media screen and (max-width: 600px) {

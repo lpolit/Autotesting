@@ -1,10 +1,11 @@
 <template>
     <div class="row g-2 mb-4">
-        <div class="col-5">
-            <e-label>Tipo de selector:</e-label>
+      <label>Tipo de selector:</label>
+        <div class="col-5" style="display: flex">
             <select v-model="selector_type" class="form-select">
                 <option class="text-grey-20" v-for="selector in list_selectors" :key="selector" :value="selector.toLowerCase()">{{ selector }}</option>
             </select>
+          <img title="El selector permite identificar un elemento de la página a través del valor de sus atributos (id, name, etc.) o por su ubicacion en el codigo HTML(Xpath). Para obtenerlo facilmente abrimos las herramientas del desarrollador en el browser (F12) y con la herramienta de seleccion (Ctrl+Shift+C) hacemos clic sobre el elemento y en el codigo HTML que se posiciona hacemos clic derecho-> copy-> Copy Xpath  " style="cursor:pointer; width: 15px; margin-left: 20px" src="../icons/info-fill.svg"/>
         </div>
         <div>
             <input class="form-control" v-model="path_element" placeholder="Ej. //*[@id='element']">

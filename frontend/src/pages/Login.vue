@@ -2,8 +2,11 @@
          <div id="app">
            <div id="login">
              <div id="description">
-               <img style="padding-top: 10px;" width="300" src="logo.png"/>
-               <p>Aca iria algun de slogan de la app allalalallalalallalal</p>
+               <img width="300" src="logo.png"/>
+               <p style="width:311px">
+                 <b>Automatizacion al alcance de todos!</b> <br>
+                 Consiga mayor cobertura con menor esfuerzo, agilizando las pruebas repetitivas.
+               </p>
              </div>
              <div id="form">
                <form @submit.prevent="doLogin">
@@ -166,6 +169,7 @@
 
        div#app div#login div#form button:hover {
          background-color: #eeeeee;
+         color: dimgray;
        }
 
        @media screen and (max-width: 600px) {
