@@ -49,7 +49,7 @@
   </table>
 
   <MDBModal
-      id="modal_delete"
+      id="result_delete"
       tabindex="-1"
       v-model="result_modal"
   >
@@ -57,8 +57,8 @@
       <MDBModalTitle> Resultado de la ejecucion de:  <i>{{result_view.flux_name.split("-")[0]}}</i> </MDBModalTitle>
     </MDBModalHeader>
     <MDBModalBody>
-      <ul class="list-group">
-        <li  v-for="item in result_view.list_steps.steps" :key="item.id" :class="[item.status == 'OK' ? 'list-group-item list-group-item-success' : 'list-group-item list-group-item-danger']"  v-html=" '<h5>'+item.name +' </h5>'+item.description"></li>
+      <ul class="list-group" style="font-size: 12px">
+        <li  v-for="item in result_view.list_steps.steps" :key="item.id" :class="[item.status == 'OK' ? 'list-group-item list-group-item-success' : 'list-group-item list-group-item-danger']"  v-html=" '<h6>'+item.name +' </h6>'+item.description"></li>
       </ul>
     </MDBModalBody>
     <MDBModalFooter>

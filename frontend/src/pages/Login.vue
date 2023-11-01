@@ -5,7 +5,7 @@
                <img width="300" src="logo.png"/>
                <p style="width:311px">
                  <b>Automatizacion al alcance de todos!</b> <br>
-                 Consiga mayor cobertura con menor esfuerzo, agilizando las pruebas repetitivas.
+                 Consiga mayor cobertura con menor esfuerzo agilizando las pruebas repetitivas.
                </p>
              </div>
              <div id="form">

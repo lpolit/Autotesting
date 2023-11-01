@@ -27,7 +27,7 @@
 <!--  <a value="Volver" @click="volver">Volver</a>-->
 
 
-  <div style="margin-left: 73%;">
+  <div style="margin-left: 80%;">
 
     <a title="Ejecutar flujo" >
       <button id="btn_ejecutar" class="btn btn-primary" @click="ejecutar_flujo" :disabled="is_disabled">
@@ -108,10 +108,7 @@
           <transition-group>
             <div class="card-image" v-for="(st, index) in step_store.list_steps.steps" :key="st.id">
               <div class="icon-position mx-6">
-
-                <b style="width: 90px" v-if="st.id===13">Verificacion</b>
-                <b style="width: 90px" v-else-if="st.id===14">Verificacion</b>
-                <b style="width: 90px" v-else>Paso{{index + 1}}</b>
+                Paso{{index + 1}}
 
                 <Icon v-if="st.status === 'OK'" icon="check_circle"/>
                 <Icon v-if="st.status === 'ERROR'" icon="error"/>
@@ -125,40 +122,20 @@
                        :header-html='"<b>"+ st.name +"</b>"'
                        @dblclick="show_modal(st.orden)"
                        style="border-left-width: 0.5rem !important">
-                <MDBCardHeader :id="'card-'+st.orden+'-header'" >
-                  {{ st.name }}
-                </MDBCardHeader>
-                <MDBCardBody class="cb" :id="'card-'+st.orden+'-body'">
-                  <MDBCardText class="description" v-html="st.description">
-                  </MDBCardText>
-
+                <MDBCardHeader :id="'card-'+st.orden+'-header'" style="display: flex;justify-content: space-between;">
+                  <h8 style="width: -webkit-fill-available;">{{ st.name }}</h8>
                   <a title="Eliminar paso">
-                    <button name="btn_eliminar_step" class="btn btn-primary btn-align bin" @click="set_modal_delete(true)" :disabled="is_disabled">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                           fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                      </svg>
+                    <button name="btn_eliminar_step" class="btn btn-danger" style="width: 10px; height: 25px" @click="set_modal_delete(true, index)" :disabled="is_disabled">
+                      <img src="../icons/delete.svg" style="filter: invert(1); margin-top: -17px;margin-left: -8px;"/>
                     </button>
                   </a>
+                </MDBCardHeader>
+                <MDBCardBody :id="'card-'+st.orden+'-body'">
+                  <MDBCardText class="description" v-html="st.description">
+                  </MDBCardText>
                 </MDBCardBody>
               </MDBCard>
-              <MDBModal
-                  id="modal_delete"
-                  tabindex="-1"
-                  v-model="modal_delete"
-              >
-                <MDBModalHeader>
-                  <MDBModalTitle> Eliminar Paso </MDBModalTitle>
-                </MDBModalHeader>
-                <MDBModalBody>
-                  <label>¿Esta seguro que desea eliminar el paso?</label>
-                </MDBModalBody>
-                <MDBModalFooter>
-                  <button @click="set_modal_delete(false)" class="btn btn-danger">Cancel</button>
-                  <button @click="delete_card(index)" class="btn btn-primary">Aceptar</button>
-                </MDBModalFooter>
-              </MDBModal>
+
             </div>
           </transition-group>
         </VueDraggableNext>
@@ -181,6 +158,22 @@
       <MDBModalFooter>
         <button @click="clear_step" class="btn btn-danger">Cancel</button>
         <button @click="set_step_data" class="btn btn-primary">Aceptar</button>
+      </MDBModalFooter>
+    </MDBModal>
+    <MDBModal
+        id="modal_delete"
+        tabindex="-1"
+        v-model="modal_delete"
+    >
+      <MDBModalHeader>
+        <MDBModalTitle> Eliminar Paso </MDBModalTitle>
+      </MDBModalHeader>
+      <MDBModalBody>
+        <label>¿Esta seguro que desea eliminar el paso?</label>
+      </MDBModalBody>
+      <MDBModalFooter>
+        <button @click="set_modal_delete(false,0)" class="btn btn-danger">Cancel</button>
+        <button @click="delete_card()" class="btn btn-primary">Aceptar</button>
       </MDBModalFooter>
     </MDBModal>
 
@@ -258,6 +251,7 @@ let flow_id = 0;
 let card_pos = 0;
 let show_sidebar = ref(false);
 let type_sidebar = ref();
+let step_index_delete = 0;
 
 const list_components = [
   {"id": 1, "value": OpenBrowser},
@@ -303,8 +297,9 @@ onMounted (() => {
   }
 })
 
-const set_modal_delete = (valor: boolean) =>{
+const set_modal_delete = (valor: boolean, index: number) =>{
   modal_delete.value = valor;
+  step_index_delete = index
 }
 
 const notificar = (type: string, title: string, text: string) =>{
@@ -521,7 +516,8 @@ const log_out = () => {
   router.push("/")
 }
 
-const delete_card = (index: number) => {
+const delete_card = () => {
+  let index = step_index_delete
   step_store.list_steps.steps.splice(index, 1);
   let step_var = step_store.list_vars.find(it => it.index == index)
   if (step_var)
@@ -563,7 +559,7 @@ const clean = (evt: any) => {
 const clear_step = () => {
   step.value = "";
   modal.value=false;
-  set_modal_delete(false);
+  set_modal_delete(false, 0);
 }
 
 const toogle_sidebar = (type: string) => {
@@ -637,7 +633,7 @@ body {
 }
 
 .card {
-  width: 756px;
+  width: 780px;
   margin-left: 10%;
 }
 
@@ -673,10 +669,7 @@ body {
   margin-right: 10px;
   justify-content: end;
 }
-.cb{
-  display: flex;
-  justify-content: space-between;
-}
+
 .navbar-brand img {
   width: 150px;
 }

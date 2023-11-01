@@ -22,8 +22,8 @@
   {
     "name": "Verificar",
     "value": [
-      {"id": 13, "name": "Igualdad", "status": ""},
-      {"id": 14, "name": "Elemento web", "status": ""}
+      {"id": 13, "name": "Verificar igualdad", "status": ""},
+      {"id": 14, "name": "Verificar Elemento web", "status": ""}
     ]
   },
   {
