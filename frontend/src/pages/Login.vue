@@ -4,7 +4,7 @@
              <div id="description">
                <img width="300" src="logo.png"/>
                <p style="width:311px">
-                 <b>Automatizacion al alcance de todos!</b> <br>
+                 <b>Automatizacion al alcance de todos</b> <br>
                  Consiga mayor cobertura con menor esfuerzo agilizando las pruebas repetitivas.
                </p>
              </div>
@@ -16,7 +16,7 @@
                  <label for="password">Contraseña</label>&nbsp;
                  <i class="fas" :class="[passwordFieldIcon]" @click="hidePassword = !hidePassword"></i>
                  <input :type="passwordFieldType" id="password" v-model="password" placeholder="**********">
-                 <input style="color: red; font-size: 10px; border: none" id ="mensajeError" v-model="mensajeError"/>
+                 <input style="color: red; font-size: 14px; border: none" id ="mensajeError" v-model="mensajeError"/>
                  <button class="btn" type="submit">Ingresar</button>
                </form>
                <div class="col-5 mx-auto"  >
@@ -25,7 +25,7 @@
                  </button>
 
                </div>
-               <a @click="reset" class="btn btn-link" style="font-size: 12px; margin: 18px 0 0 13px">
+               <a @click="reset" class="btn btn-link" style="font-size: 14px; margin: 18px 0 0 13px">
                  Olvido su Contraseña?
                </a>
              </div>
@@ -142,7 +142,7 @@
        }
 
        div#app div#login div#form label {
-         color: #95a5a6;
+         color: white;
          font-size: 0.8em;
        }
 

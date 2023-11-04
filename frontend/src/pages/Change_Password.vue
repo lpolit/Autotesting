@@ -149,7 +149,7 @@
        }
 
        div#app div#register div#form label {
-         color: #95a5a6;
+         color: white;
          font-size: 0.8em;
        }
 

@@ -23,7 +23,7 @@
                  <input style="color: red; font-size: 10px; border: none" id ="mensajeError" v-model="mensajeError"/>
                  <button class="btn" type="submit">Registrarse</button>
                </form>
-               <a href="#" class="btn btn-link" style="font-size: 12px; margin-top: 15px;">
+               <a href="#" class="btn btn-link" style="font-size: 14px; margin-top: 15px;">
                  Loguearse
                </a>
              </div>
@@ -143,7 +143,7 @@
        }
 
        div#app div#register div#form label {
-         color: #95a5a6;
+         color: white;
          font-size: 0.8em;
        }
 
